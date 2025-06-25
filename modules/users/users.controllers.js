@@ -21,10 +21,10 @@ const addUser = async (req, res) => {
       where: {
         [Op.or]: [
           {
-            phone: phone || null,
+            phone: phone || "",
           },
           {
-            email: email || null,
+            email: email || "",
           },
         ],
       },
@@ -74,10 +74,10 @@ const confirmCode = async (req, res) => {
       where: {
         [Op.or]: [
           {
-            phone: phone || null,
+            phone: phone || "",
           },
           {
-            email: email || null,
+            email: email || "",
           },
         ],
       },
