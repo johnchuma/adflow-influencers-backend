@@ -44,7 +44,7 @@ const addUser = async (req, res) => {
           to: email,
           otp: code,
           subject: "Confirmation Code",
-          username: user.name,
+          username: name,
         });
       }
       console.log(wr);
