@@ -68,10 +68,18 @@ const addUser = async (req, res) => {
 
 const confirmCode = async (req, res) => {
   try {
-    let { phone, code } = req.body;
-    const user = await User.findOne({
+    let { phone, email, code } = req.body;
+    console.log(req.body);
+    let user = await User.findOne({
       where: {
-        phone,
+        [Op.or]: [
+          {
+            phone: phone || null,
+          },
+          {
+            email: email || null,
+          },
+        ],
       },
     });
     console.log(user);
