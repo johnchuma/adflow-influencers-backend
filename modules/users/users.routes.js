@@ -10,7 +10,6 @@ const {
   getMyInfo,
 } = require("./users.controllers");
 const { getPagination } = require("../../utils/getPagination");
-
 const router = Router();
 
 router.post("/", addUser);

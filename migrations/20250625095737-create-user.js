@@ -14,11 +14,11 @@ module.exports = {
       },
       email: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       phone: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       verificationCode: {
         type: DataTypes.INTEGER,
