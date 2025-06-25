@@ -129,9 +129,7 @@ const getInfluencers = async (req, res) => {
           model: InfluencerDetail,
         },
       ],
-      attributes: {
-        exclude: ["id"],
-      },
+     
     });
     successResponse(res, {
       count: response.count,
