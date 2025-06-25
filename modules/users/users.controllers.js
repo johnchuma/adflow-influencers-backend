@@ -136,9 +136,9 @@ const getInfluencers = async (req, res) => {
   }
 };
 
-const getUserInfo = async (req, res) => {
+const getMyInfo = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.user;
     const user = await User.findOne({
       where: {
         id,
@@ -222,7 +222,7 @@ module.exports = {
   getInfluencers,
   confirmCode,
   deleteUser,
-  getUserInfo,
+  getMyInfo,
   sendCode,
   updateUser,
 };
