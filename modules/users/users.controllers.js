@@ -94,9 +94,8 @@ const confirmCode = async (req, res) => {
           status: true,
         });
         await user.update({
-          verificationCode: null,
+          code: null,
         });
-        await addLog("Logged in to the system", user);
       } else {
         res.status(401).send({
           status: false,
