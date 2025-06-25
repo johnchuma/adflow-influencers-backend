@@ -87,6 +87,7 @@ const confirmCode = async (req, res) => {
       const result = user.verificationCode == code;
       if (result) {
         const tokens = generateJwtTokens(user);
+
         res.status(200).json({
           body: {
             tokens,
@@ -94,7 +95,7 @@ const confirmCode = async (req, res) => {
           status: true,
         });
         await user.update({
-          code: null,
+          verificationCode: null,
         });
       } else {
         res.status(401).send({
@@ -129,7 +130,6 @@ const getInfluencers = async (req, res) => {
           model: InfluencerDetail,
         },
       ],
-     
     });
     successResponse(res, {
       count: response.count,
