@@ -16,15 +16,15 @@ const { sendWhatsappAuthSMS } = require("../../utils/send_whatsapp_sms");
 const addUser = async (req, res) => {
   try {
     let { name, email, phone, role } = req.body;
-
+    console.log(req.body);
     let user = await User.findOne({
       where: {
         [Op.or]: [
           {
-            phone,
+            phone: phone,
           },
           {
-            email,
+            email: email,
           },
         ],
       },
@@ -48,7 +48,7 @@ const addUser = async (req, res) => {
         });
       }
       console.log(wr);
-      const user = await User.create({
+      await User.create({
         name,
         phone,
         verificationCode: code,
