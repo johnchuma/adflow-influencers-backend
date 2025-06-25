@@ -21,9 +21,11 @@ const userSockets = {};
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+const swaggerDocument = require("./swagger-output.json");
 
 // Serve static files
 app.use("/files", express.static("files"));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Middleware
 app.use((req, res, next) => {
