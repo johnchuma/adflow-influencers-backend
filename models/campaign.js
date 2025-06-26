@@ -40,12 +40,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       duration: {
-        type: DataTypes.DOUBLE,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       includeTesting: {
-        type: DataTypes.DOUBLE,
-        allowNull: false,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
       objectives: {
         type: DataTypes.JSON,
