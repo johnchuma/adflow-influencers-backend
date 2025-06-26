@@ -14,7 +14,7 @@ const addCampaign = async (req, res) => {
       deliverables,
       requirements,
     } = req.body;
-
+    const user = req.user;
     const response = Campaign.create({
       title,
       description,
@@ -23,6 +23,7 @@ const addCampaign = async (req, res) => {
       includeTesting,
       objectives,
       deliverables,
+      userId: user.id,
       requirements,
     });
 
