@@ -2,7 +2,7 @@ const path = require("path");
 
 const getUrl = async (req) => {
   const file = req.file;
-  return `http://localhost:4001/files/${file.originalname}`;
+  return `https://influencerapi.adflow.africa/files/${file.originalname}`;
 };
 
 const getHtmlLink = async (req) => {

@@ -15,9 +15,9 @@ const router = Router();
 router.post("/", addUser);
 router.post("/auth/confirm-code", confirmCode);
 router.post("/auth/send-code", sendCode);
-router.get("/", getPagination, getInfluencers);
+router.get("/influencers", getPagination, getInfluencers);
 router.get("/me", validateJWT, getMyInfo);
-router.patch("/:uuid", validateJWT, updateUser);
-router.delete("/:uuid", validateJWT, deleteUser);
+router.patch("/:id", validateJWT, updateUser);
+router.delete("/:id",  deleteUser);
 
 module.exports = router;

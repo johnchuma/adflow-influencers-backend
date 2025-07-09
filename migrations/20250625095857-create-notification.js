@@ -28,6 +28,10 @@ module.exports = {
         type: DataTypes.UUID,
         allowNull: false,
       },
+      campaignId: {
+        type: DataTypes.UUID,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,

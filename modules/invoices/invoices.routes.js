@@ -13,8 +13,8 @@ const router = Router();
 
 router.post("/", validateJWT, addInvoice);
 router.get("/user/:id", validateJWT, getPagination, getInvoices);
-router.get("/:uuid", validateJWT, getInvoice);
-router.patch("/:uuid", validateJWT, updateInvoice);
-router.delete("/:uuid", validateJWT, deleteInvoice);
+router.get("/:id", validateJWT, getInvoice);
+router.patch("/:id", validateJWT, updateInvoice);
+router.delete("/:id", validateJWT, deleteInvoice);
 
 module.exports = router;

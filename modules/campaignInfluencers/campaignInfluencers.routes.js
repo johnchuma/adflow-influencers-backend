@@ -6,6 +6,9 @@ const {
   updateCampaignInfluencer,
   deleteCampaignInfluencer,
   getCampaignInfluencer,
+  getInfluencerPendingApplications,
+  getInfluencerApprovedApplications,
+  getInfluencerRejectedApplications,
 } = require("./campaignInfluencers.controllers");
 const { getPagination } = require("../../utils/getPagination");
 
@@ -13,8 +16,11 @@ const router = Router();
 
 router.post("/", validateJWT, addCampaignInfluencer);
 router.get("/user/:id", validateJWT, getPagination, getCampaignInfluencers);
-router.get("/:uuid", validateJWT, getCampaignInfluencer);
-router.patch("/:uuid", validateJWT, updateCampaignInfluencer);
-router.delete("/:uuid", validateJWT, deleteCampaignInfluencer);
+router.get("/pending", validateJWT,getPagination, getInfluencerPendingApplications);
+router.get("/approved", validateJWT,getPagination, getInfluencerApprovedApplications);
+router.get("/rejected", validateJWT, getPagination, getInfluencerRejectedApplications);
+router.get("/:id", validateJWT, getCampaignInfluencer);
+router.patch("/:id", validateJWT, updateCampaignInfluencer);
+router.delete("/:id", validateJWT, deleteCampaignInfluencer);
 
 module.exports = router;

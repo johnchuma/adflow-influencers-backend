@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      InfluencerDetail.belongsTo(models.User)
     }
   }
   InfluencerDetail.init({
@@ -27,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       profileUrl: {
         type: DataTypes.TEXT("long"),
+        allowNull: true,
+      },
+       category: {
+        type: DataTypes.STRING,
         allowNull: true,
       },
       instagramHandle: {

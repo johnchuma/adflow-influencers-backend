@@ -1,5 +1,5 @@
 const { Op, fn } = require("sequelize");
-const { CampaignInfluencer } = require("../../models");
+const { CampaignInfluencer,Campaign,User,InfluencerDetail } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 
 const addCampaignInfluencer = async (req, res) => {
@@ -56,16 +56,116 @@ const getCampaignInfluencers = async (req, res) => {
     errorResponse(res, error);
   }
 };
+const getInfluencerPendingApplications = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const {campaignId} = req.query
+    console.log(campaignId)
 
+    const response = await CampaignInfluencer.findAndCountAll({
+      limit: req.limit,
+      offset: req.offset,
+      include:[
+         {
+          model:Campaign,
+          where:{
+            id:campaignId
+          }
+        
+      },{
+        model:User,//influencer
+        include:[InfluencerDetail]
+    
+      }],
+      where: {
+       status:"PENDING"
+      },
+    });
+    console.log("count",response.count)
+    successResponse(res, {
+      count: response.count,
+      page: req.page,
+      rows: response.rows,
+    });
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+const getInfluencerApprovedApplications = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const {campaignId} = req.query
+    console.log(campaignId)
+    const response = await CampaignInfluencer.findAndCountAll({
+      limit: req.limit,
+      offset: req.offset,
+      include:[
+         {
+          model:Campaign,
+          where:{
+            id:campaignId
+          }
+         }
+      ,{
+        model:User,//influencer
+        include:[InfluencerDetail]
+    
+      }],
+      where: {
+       status:"APPROVED"
+      },
+    });
+    successResponse(res, {
+      count: response.count,
+      page: req.page,
+      rows: response.rows,
+    });
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+const getInfluencerRejectedApplications = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const {campaignId} = req.query
+    console.log(campaignId)
+
+    const response = await CampaignInfluencer.findAndCountAll({
+      limit: req.limit,
+      offset: req.offset,
+      include:[{
+          model:Campaign,
+          where:{
+            id:campaignId
+          }
+        
+      },{
+        model:User,//influencer
+        include:[InfluencerDetail]
+    
+      }],
+      where: {
+       status:"REJECTED"
+      },
+    });
+    successResponse(res, {
+      count: response.count,
+      page: req.page,
+      rows: response.rows,
+    });
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
 const getCampaignInfluencer = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await CampaignInfluencer.findOne({
+    const data = await CampaignInfluencer.findOne({
       where: {
         id,
       },
     });
-    successResponse(res, user);
+    successResponse(res, data);
   } catch (error) {
     errorResponse(res, error);
   }
@@ -74,12 +174,13 @@ const getCampaignInfluencer = async (req, res) => {
 const updateCampaignInfluencer = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await CampaignInfluencer.findOne({
+    console.log(id)
+    const data = await CampaignInfluencer.findOne({
       where: {
         id,
       },
     });
-    const response = await user.update({
+    const response = await data.update({
       ...req.body,
     });
     successResponse(res, response);
@@ -91,12 +192,12 @@ const updateCampaignInfluencer = async (req, res) => {
 const deleteCampaignInfluencer = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await CampaignInfluencer.findOne({
+    const data = await CampaignInfluencer.findOne({
       where: {
         id,
       },
     });
-    const response = await user.destroy();
+    const response = await data.destroy();
     successResponse(res, response);
   } catch (error) {
     errorResponse(res, error);
@@ -108,5 +209,8 @@ module.exports = {
   getCampaignInfluencers,
   deleteCampaignInfluencer,
   getCampaignInfluencer,
+  getInfluencerPendingApplications,
+  getInfluencerApprovedApplications,
+  getInfluencerRejectedApplications,
   updateCampaignInfluencer,
 };

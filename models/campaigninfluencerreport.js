@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      campaignInfluencerReportId: {
+      campaignInfluencerId: {
         type: DataTypes.UUID,
         allowNull: false,
       },

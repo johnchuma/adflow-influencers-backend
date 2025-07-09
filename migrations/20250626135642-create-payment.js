@@ -1,32 +1,36 @@
-"use strict";
+'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable("CampaignInfluencerReports", {
+    await queryInterface.createTable('Payments', {
       id: {
         primaryKey: true,
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      campaignInfluencerId: {
-        type: DataTypes.UUID,
+      amount: {
+        type: DataTypes.DOUBLE,
         allowNull: false,
       },
-      url: {
-        type: DataTypes.STRING,
-        allowNull: false,
+      status:{
+        type: DataTypes.ENUM("PENDING","COMPLETED"),
+        defaultValue:"PENDING"
+      },
+      campaignId:{
+        type: DataTypes.UUID,
+        allowNull:false
       },
       createdAt: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: DataTypes.DATE,
-      },
+        type: DataTypes.DATE
+      }
     });
   },
   async down(queryInterface, DataTypes) {
-    await queryInterface.dropTable("CampaignInfluencerReports");
-  },
+    await queryInterface.dropTable('Payments');
+  }
 };

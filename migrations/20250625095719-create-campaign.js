@@ -24,13 +24,13 @@ module.exports = {
         type: DataTypes.TEXT("long"),
         allowNull: false,
       },
-      budget: {
-        type: DataTypes.DOUBLE,
+      duration: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
-      duration: {
-        type: DataTypes.DOUBLE,
-        allowNull: false,
+      includeTesting: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
       includeTesting: {
         type: DataTypes.DOUBLE,

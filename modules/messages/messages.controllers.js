@@ -1,29 +1,14 @@
 const { Op, fn } = require("sequelize");
-const { Notification } = require("../../models");
+const { Message } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 
-const addNotification = async (req, res) => {
+const addMessage = async (req, res) => {
   try {
     let {
-      title,
-      description,
-      budget,
-      targetAudiance,
-      includeTesting,
-      objectives,
-      deliverables,
-      requirements,
+     message,campaignInfluencerId
     } = req.body;
-
-    const response = Notification.create({
-      title,
-      description,
-      budget,
-      targetAudiance,
-      includeTesting,
-      objectives,
-      deliverables,
-      requirements,
+    const response = await Message.create({
+     message,campaignInfluencerId,userId:req.user.id
     });
 
     successResponse(res, response);
@@ -33,18 +18,17 @@ const addNotification = async (req, res) => {
   }
 };
 
-const getNotifications = async (req, res) => {
+const getMessages = async (req, res) => {
   try {
     const { keyword } = req.query;
-    const { id } = req.params;
-    const response = await Notification.findAndCountAll({
+    const { campaignInfluencerId } = req.params;
+    const response = await Message.findAndCountAll({
+      order:[["createdAt"]],
       limit: req.limit,
       offset: req.offset,
       where: {
-        title: {
-          [Op.like]: `%${keyword}%`,
-        },
-        userId: id,
+       campaignInfluencerId,
+
       },
     });
     successResponse(res, {
@@ -57,10 +41,10 @@ const getNotifications = async (req, res) => {
   }
 };
 
-const getNotification = async (req, res) => {
+const getMessage = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await Notification.findOne({
+    const user = await Message.findOne({
       where: {
         id,
       },
@@ -71,10 +55,10 @@ const getNotification = async (req, res) => {
   }
 };
 
-const updateNotification = async (req, res) => {
+const updateMessage = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await Notification.findOne({
+    const user = await Message.findOne({
       where: {
         id,
       },
@@ -88,10 +72,10 @@ const updateNotification = async (req, res) => {
   }
 };
 
-const deleteNotification = async (req, res) => {
+const deleteMessage = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await Notification.findOne({
+    const user = await Message.findOne({
       where: {
         id,
       },
@@ -104,9 +88,9 @@ const deleteNotification = async (req, res) => {
 };
 
 module.exports = {
-  addNotification,
-  getNotifications,
-  deleteNotification,
-  getNotification,
-  updateNotification,
+  addMessage,
+  getMessages,
+  deleteMessage,
+  getMessage,
+  updateMessage,
 };

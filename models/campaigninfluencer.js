@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      CampaignInfluencer.belongsTo(models.User)
+      CampaignInfluencer.belongsTo(models.Campaign)
     }
   }
   CampaignInfluencer.init(

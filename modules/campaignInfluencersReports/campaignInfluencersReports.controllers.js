@@ -5,25 +5,12 @@ const { errorResponse, successResponse } = require("../../utils/responses");
 const addCampaignInfluencerReport = async (req, res) => {
   try {
     let {
-      title,
-      description,
-      budget,
-      targetAudiance,
-      includeTesting,
-      objectives,
-      deliverables,
-      requirements,
+     url,
+     campaignInfluencerId
     } = req.body;
-
+console.log(req.body)
     const response = CampaignInfluencerReport.create({
-      title,
-      description,
-      budget,
-      targetAudiance,
-      includeTesting,
-      objectives,
-      deliverables,
-      requirements,
+      url,campaignInfluencerId
     });
 
     successResponse(res, response);

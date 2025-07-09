@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Notification.belongsTo(models.Campaign);
+      Notification.belongsTo(models.User)
     }
   }
   Notification.init(
@@ -33,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
       isRead: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+      },
+      campaignId: {
+        type: DataTypes.UUID,
+        allowNull: true,
       },
       type: {
         type: DataTypes.STRING,

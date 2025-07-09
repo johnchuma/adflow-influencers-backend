@@ -13,8 +13,8 @@ const router = Router();
 
 router.post("/", validateJWT, addInfluencerDetail);
 router.get("/user/:id", validateJWT, getPagination, getInfluencerDetails);
-router.get("/:uuid", validateJWT, getInfluencerDetail);
-router.patch("/:uuid", validateJWT, updateInfluencerDetail);
-router.delete("/:uuid", validateJWT, deleteInfluencerDetail);
+router.get("/:id", validateJWT, getInfluencerDetail);
+router.patch("/:id",  updateInfluencerDetail);
+router.delete("/:id", validateJWT, deleteInfluencerDetail);
 
 module.exports = router;

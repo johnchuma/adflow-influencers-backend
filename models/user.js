@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasOne(models.InfluencerDetail)
+      User.hasOne(models.ClientDetail)
     }
   }
   User.init(

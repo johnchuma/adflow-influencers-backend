@@ -1,20 +1,20 @@
 const { Router } = require("express");
 const { validateJWT } = require("../../utils/validateJWT");
 const {
-  addNotification,
-  getNotifications,
-  updateNotification,
-  deleteNotification,
-  getNotification,
+  addMessage,
+  getMessages,
+  updateMessage,
+  deleteMessage,
+  getMessage,
 } = require("./messages.controllers");
 const { getPagination } = require("../../utils/getPagination");
 
 const router = Router();
 
-router.post("/", validateJWT, addNotification);
-router.get("/user/:id", validateJWT, getPagination, getNotifications);
-router.get("/:uuid", validateJWT, getNotification);
-router.patch("/:uuid", validateJWT, updateNotification);
-router.delete("/:uuid", validateJWT, deleteNotification);
+router.post("/", validateJWT, addMessage);
+router.get("/:campaignInfluencerId", validateJWT, getPagination, getMessages);
+router.get("/:id", validateJWT, getMessage);
+router.patch("/:id", validateJWT, updateMessage);
+router.delete("/:id", validateJWT, deleteMessage);
 
 module.exports = router;

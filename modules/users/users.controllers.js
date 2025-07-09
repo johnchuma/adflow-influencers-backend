@@ -4,6 +4,7 @@ const {
   InfluencerDetail,
   BusinessCategory,
   Sequelize,
+  ClientDetail
 } = require("../../models");
 const { generateJwtTokens } = require("../../utils/generateJwtTokens");
 const { errorResponse, successResponse } = require("../../utils/responses");
@@ -12,10 +13,14 @@ const { sendOTPEmail } = require("../../utils/mail_controller");
 require("dotenv").config();
 
 const { sendWhatsappAuthSMS } = require("../../utils/send_whatsapp_sms");
+const { default: axios } = require("axios");
+const { name } = require("ejs");
 
 const addUser = async (req, res) => {
   try {
-    let { name, email, phone, role } = req.body;
+    let { name, email, phone,company, role } = req.body;
+
+    const {from} = req.query;
     console.log(req.body);
     let user = await User.findOne({
       where: {
@@ -47,17 +52,30 @@ const addUser = async (req, res) => {
           username: name,
         });
       }
-      console.log(wr);
-      await User.create({
-        name,
+      const user = await User.create({
+          name,
+          phone,
+          verificationCode: code,
+          role,
+          email,
+        });
+      if(user.role == "client"){
+        await ClientDetail.create({
+          userId:user.id,
+          company
+        })
+      }
+      await axios.post("https://api.kwanza.io/users",{
+        role:"influencer",
         phone,
-        verificationCode: code,
-        role,
-        email,
+        name,
+        email:name
+      }).catch((e)=>{
+        console.log(e)
       });
-
       successResponse(res, {
         message: "Verification code is sent successfully",
+        
       });
     }
   } catch (error) {
@@ -82,7 +100,8 @@ const confirmCode = async (req, res) => {
         ],
       },
     });
-    console.log(user);
+    console.log(user.dataValues);
+    console.log(code)
     if (user) {
       const result = user.verificationCode == code;
       if (result) {
@@ -116,18 +135,22 @@ const confirmCode = async (req, res) => {
 
 const getInfluencers = async (req, res) => {
   try {
-    const { keyword } = req.query;
+    const { keyword,} = req.query;
+  
+    console.log(keyword,req.limit,req.offset)
+    console.log(req.limit)
     const response = await User.findAndCountAll({
       limit: req.limit,
       offset: req.offset,
-      where: {
-        name: {
+      where:{
+         name:{
           [Op.like]: `%${keyword}%`,
         },
       },
       include: [
         {
           model: InfluencerDetail,
+          required:true
         },
       ],
     });
@@ -148,6 +171,7 @@ const getMyInfo = async (req, res) => {
       where: {
         id,
       },
+      include:[ClientDetail]
     });
     successResponse(res, user);
   } catch (error) {
@@ -159,7 +183,14 @@ const sendCode = async (req, res) => {
     let { phone, email } = req.body;
     let user = await User.findOne({
       where: {
-        phone,
+      [Op.or]: [
+          {
+            phone: phone || "",
+          },
+          {
+            email: email || "",
+          },
+        ],
       },
     });
     if (user) {
@@ -178,6 +209,7 @@ const sendCode = async (req, res) => {
       user = await user.update({
         verificationCode: code,
       });
+      console.log(user)
       successResponse(res, {
         message: "Verification code is sent successfully",
       });
@@ -194,9 +226,14 @@ const sendCode = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
+    const {phone} = req.query;
     const user = await User.findOne({
       where: {
-        id,
+        [Op.or]:[{
+          id,
+        },{
+          phone
+        }]
       },
     });
     const response = await user.destroy();

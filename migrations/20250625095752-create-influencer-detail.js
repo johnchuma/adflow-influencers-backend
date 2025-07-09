@@ -13,6 +13,10 @@ module.exports = {
         unique: true,
         allowNull: true,
       },
+       category: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       profileUrl: {
         type: DataTypes.TEXT("long"),
         allowNull: true,

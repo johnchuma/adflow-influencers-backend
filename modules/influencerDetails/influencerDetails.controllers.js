@@ -1,31 +1,11 @@
 const { Op, fn } = require("sequelize");
-const { InfluencerDetail } = require("../../models");
+const { InfluencerDetail,User } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 
 const addInfluencerDetail = async (req, res) => {
   try {
-    let {
-      title,
-      description,
-      budget,
-      targetAudiance,
-      includeTesting,
-      objectives,
-      deliverables,
-      requirements,
-    } = req.body;
-
-    const response = InfluencerDetail.create({
-      title,
-      description,
-      budget,
-      targetAudiance,
-      includeTesting,
-      objectives,
-      deliverables,
-      requirements,
-    });
-
+   let data = req.body
+    const response = await InfluencerDetail.create(data);
     successResponse(res, response);
   } catch (error) {
     console.log(error);
@@ -57,6 +37,8 @@ const getInfluencerDetails = async (req, res) => {
   }
 };
 
+
+
 const getInfluencerDetail = async (req, res) => {
   try {
     const { id } = req.params;
@@ -74,14 +56,70 @@ const getInfluencerDetail = async (req, res) => {
 const updateInfluencerDetail = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await InfluencerDetail.findOne({
-      where: {
-        id,
-      },
-    });
-    const response = await user.update({
-      ...req.body,
-    });
+    let response;
+    if(id == "adflow"){
+      let data = req.body;
+      let userDetails = data.User
+      delete data.id;
+      delete data.uuid;
+      delete data.userId;
+      delete data.UserId;
+      delete data.createdAt;
+      delete data.updatedAt;
+      delete userDetails.id;
+      delete userDetails.uuid;
+      delete userDetails.password;
+      delete userDetails.createdAt;
+      delete userDetails.updatedAt;
+      delete data.User;
+      console.log("received", data,userDetails)
+         const user = await User.findOne({
+               where:{
+                phone:userDetails.phone
+               },
+               include:[InfluencerDetail]
+         })
+         if(user){
+          console.log("user is registered")
+            if(user.InfluencerDetail){
+              console.log("User registered and have Influencer Details")
+               const infDet = await InfluencerDetail.findOne({
+                where: {
+                  id:user.InfluencerDetail.id,
+                },
+              });
+               await infDet.update({
+                  ...data,
+                });
+            }else{
+              console.log("User registered but do not have influencer details")
+              await InfluencerDetail.create({
+                  ...data,
+                  userId:user.id
+              })
+            }
+         }else{
+          console.log("user was not registered")
+          const user = await User.create({
+              ...userDetails
+          })
+          console.log("adding influencer details")
+           await InfluencerDetail.create({
+                  userId:user.id,
+                  ...data
+              })
+         }
+    }else{
+       const user = await InfluencerDetail.findOne({
+          where: {
+            id,
+          },
+        });
+        response = await user.update({
+          ...req.body,
+        });
+    }
+    
     successResponse(res, response);
   } catch (error) {
     errorResponse(res, error);

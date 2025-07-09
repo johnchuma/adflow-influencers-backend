@@ -10,9 +10,12 @@ const UsersRoutes = require("./modules/users/users.routes");
 const CampaignsRoutes = require("./modules/campaigns/campaigns.routes");
 const MessagesRoutes = require("./modules/messages/messages.routes");
 const InvoicesRoutes = require("./modules/invoices/invoices.routes");
+const StatsRoutes = require("./modules/stats/stats.routes");
+const BannerRoutes = require("./modules/banners/banners.routes");
 const NotificationsRoutes = require("./modules/notifications/notifications.routes");
 const InfluencerDetailsRoutes = require("./modules/influencerDetails/influencerDetails.routes");
 const CampaignInfluencerReportRoutes = require("./modules/campaignInfluencersReports/campaignInfluencersReports.routes");
+const CampaignInfluencersRoutes = require("./modules/campaignInfluencers/campaignInfluencers.routes");
 const { successResponse, errorResponse } = require("./utils/responses");
 const { upload } = require("./utils/upload");
 const { getUrl } = require("./utils/get_url");
@@ -44,8 +47,11 @@ app.use("/notifications", NotificationsRoutes);
 app.use("/messages", MessagesRoutes);
 app.use("/invoices", InvoicesRoutes);
 app.use("/campaigns", CampaignsRoutes);
-app.use("/influencer-details", UsersRoutes);
+app.use("/stats", StatsRoutes);
+app.use("/banners", BannerRoutes);
+app.use("/influencer-details", InfluencerDetailsRoutes);
 app.use("/campaign-influencer-reports", CampaignInfluencerReportRoutes);
+app.use("/campaign-influencers", CampaignInfluencersRoutes);
 
 // Test route
 app.get("/", (req, res) => {
