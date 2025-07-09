@@ -52,5 +52,48 @@ const sendWhatsappAuthSMS = async ({ phone, token }) => {
     return error.response.data;
   }
 };
-
-module.exports = { sendWhatsappAuthSMS };
+const sendWhatsappMessageAlert = async ({ phone, name, link }) => {
+  try {
+    const payload = {
+      messaging_product: "whatsapp",
+      recipient_type: "individual",
+      to: phone,
+      type: "template",
+      template: {
+        name: "new_message_alert",
+        language: {
+          code: "en",
+        },
+        components: [
+          {
+            type: "body",
+            parameters: [
+              {
+                type: "text",
+                text: name,
+              },
+              {
+                type: "text",
+                text: link,
+              },
+            ],
+          },
+        ],
+      },
+    };
+    console.log(payload);
+    const response = await axios.post(
+      `https://graph.facebook.com/v22.0/${process.env.ADFLOW_WHATSAPP_NUMBER_ID}/messages`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAPP_ACCESS_TOKEN}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+module.exports = { sendWhatsappAuthSMS, sendWhatsappMessageAlert };

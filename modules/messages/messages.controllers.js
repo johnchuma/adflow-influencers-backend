@@ -1,6 +1,10 @@
 const { Op, fn } = require("sequelize");
-const { Message, User, InfluencerDetail } = require("../../models");
+const { Message, User, InfluencerDetail, Campaign } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
+const {
+  sendWhatsappAuthSMS,
+  sendWhatsappMessageAlert,
+} = require("../../utils/send_whatsapp_sms");
 
 const addMessage = async (req, res) => {
   try {
@@ -10,7 +14,11 @@ const addMessage = async (req, res) => {
       campaignInfluencerId,
       userId: req.user.id,
     });
-
+    await sendWhatsappMessageAlert({
+      phone: "0627707434",
+      name: "John",
+      link: "https://dashboard.adflow.africa/messages",
+    });
     successResponse(res, response);
   } catch (error) {
     console.log(error);
@@ -78,12 +86,25 @@ const getUnapprovedMessage = async (req, res) => {
 const updateMessage = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await Message.findOne({
+    const message = await Message.findOne({
       where: {
         id,
       },
+      include: [
+        {
+          model: Campaign,
+          include: [User],
+        },
+      ],
     });
-    const response = await user.update({
+    if (req.body.approved) {
+      await sendWhatsappMessageAlert({
+        phone: message.Campaign.User.phone,
+        name: message.Campaign.User.name,
+        link: "https://influencer.adflow.africa",
+      });
+    }
+    const response = await message.update({
       ...req.body,
     });
     successResponse(res, response);
@@ -95,12 +116,12 @@ const updateMessage = async (req, res) => {
 const deleteMessage = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await Message.findOne({
+    const message = await Message.findOne({
       where: {
         id,
       },
     });
-    const response = await user.destroy();
+    const response = await message.destroy();
     successResponse(res, response);
   } catch (error) {
     errorResponse(res, error);
