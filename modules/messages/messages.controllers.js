@@ -1,14 +1,14 @@
 const { Op, fn } = require("sequelize");
-const { Message } = require("../../models");
+const { Message, User, InfluencerDetail } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 
 const addMessage = async (req, res) => {
   try {
-    let {
-     message,campaignInfluencerId
-    } = req.body;
+    let { message, campaignInfluencerId } = req.body;
     const response = await Message.create({
-     message,campaignInfluencerId,userId:req.user.id
+      message,
+      campaignInfluencerId,
+      userId: req.user.id,
     });
 
     successResponse(res, response);
@@ -23,12 +23,11 @@ const getMessages = async (req, res) => {
     const { keyword } = req.query;
     const { campaignInfluencerId } = req.params;
     const response = await Message.findAndCountAll({
-      order:[["createdAt"]],
+      order: [["createdAt"]],
       limit: req.limit,
       offset: req.offset,
       where: {
-       campaignInfluencerId,
-
+        campaignInfluencerId,
       },
     });
     successResponse(res, {
@@ -54,7 +53,28 @@ const getMessage = async (req, res) => {
     errorResponse(res, error);
   }
 };
-
+const getUnapprovedMessage = async (req, res) => {
+  try {
+    const message = await Message.findAll({
+      where: {
+        approved: false,
+      },
+      include: [
+        {
+          model: User,
+          include: [
+            {
+              model: InfluencerDetail,
+            },
+          ],
+        },
+      ],
+    });
+    successResponse(res, message);
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
 const updateMessage = async (req, res) => {
   try {
     const { id } = req.params;
@@ -93,4 +113,5 @@ module.exports = {
   deleteMessage,
   getMessage,
   updateMessage,
+  getUnapprovedMessage,
 };

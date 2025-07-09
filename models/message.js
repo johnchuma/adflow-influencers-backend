@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Message.belongsTo(models.User);
+      Message.belongsTo(models.CampaignInfluencer);
     }
   }
   Message.init(
@@ -27,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       isRead: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      approved: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },

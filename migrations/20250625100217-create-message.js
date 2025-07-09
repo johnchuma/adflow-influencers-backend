@@ -20,6 +20,10 @@ module.exports = {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      approved: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       campaignInfluencerId: {
         type: DataTypes.UUID,
         allowNull: false,
