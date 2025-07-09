@@ -33,8 +33,8 @@ module.exports = {
         defaultValue: false,
       },
       includeTesting: {
-        type: DataTypes.DOUBLE,
-        allowNull: false,
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
       objectives: {
         type: DataTypes.JSON,

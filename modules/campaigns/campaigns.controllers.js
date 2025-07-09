@@ -30,6 +30,7 @@ const addCampaign = async (req, res) => {
       objectives,
       userId: user.id,
       deliverables,
+      userId: user.id,
       requirements,
     });
     console.log(selectedInfluencers)
