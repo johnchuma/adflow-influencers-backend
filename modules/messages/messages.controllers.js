@@ -1,10 +1,11 @@
 const { Op, fn } = require("sequelize");
-const { Message, User, InfluencerDetail, Campaign } = require("../../models");
+const { Message, User, InfluencerDetail,CampaignInfluencer, Campaign } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 const {
   sendWhatsappAuthSMS,
   sendWhatsappMessageAlert,
 } = require("../../utils/send_whatsapp_sms");
+const { sendNewMessageAlert } = require("../../utils/mail_controller");
 
 const addMessage = async (req, res) => {
   try {
@@ -15,8 +16,8 @@ const addMessage = async (req, res) => {
       userId: req.user.id,
     });
     await sendWhatsappMessageAlert({
-      phone: "0627707434",
-      name: "John",
+      phone: "0786520788",
+      name: "Herman",
       link: "https://dashboard.adflow.africa/messages",
     });
     successResponse(res, response);
@@ -92,17 +93,21 @@ const updateMessage = async (req, res) => {
       },
       include: [
         {
-          model: Campaign,
-          include: [User],
+          model: CampaignInfluencer,
+          include: [{
+            model:Campaign,
+            include:[User]
+          }],
         },
       ],
     });
     if (req.body.approved) {
-      await sendWhatsappMessageAlert({
-        phone: message.Campaign.User.phone,
-        name: message.Campaign.User.name,
-        link: "https://influencer.adflow.africa",
-      });
+      // console.log(message.CampaignInfluencer.Campaign)
+      await sendNewMessageAlert({
+        to:message.CampaignInfluencer?.Campaign?.User?.email || "johnvchuma@gmail.com",
+        username:message.CampaignInfluencer?.Campaign?.User?.name || "John",
+        subject:"New Message Alert"});
+    
     }
     const response = await message.update({
       ...req.body,

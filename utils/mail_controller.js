@@ -36,4 +36,23 @@ const sendOTPEmail = ({ to, username, otp, subject }) => {
     console.log(error);
   }
 };
-module.exports = { sendOTPEmail };
+const sendNewMessageAlert = ({ to, username,subject }) => {
+  try {
+    const templatePath = path.join(__dirname, "new_message_alert.ejs");
+    const emailParams = {
+      from: "AdFlow",
+      to: to,
+      subject: subject,
+      html: ejs.render(fs.readFileSync(templatePath, "utf8"), {
+        email: to,
+        name: username,
+      }),
+    };
+    const response = transporter.sendMail(emailParams);
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+module.exports = { sendOTPEmail,sendNewMessageAlert };
