@@ -1,5 +1,11 @@
 const { Op, fn } = require("sequelize");
-const { Message, User, InfluencerDetail,CampaignInfluencer, Campaign } = require("../../models");
+const {
+  Message,
+  User,
+  InfluencerDetail,
+  CampaignInfluencer,
+  Campaign,
+} = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 const {
   sendWhatsappAuthSMS,
@@ -31,6 +37,7 @@ const getMessages = async (req, res) => {
   try {
     const { keyword } = req.query;
     const { campaignInfluencerId } = req.params;
+    console.log()
     const response = await Message.findAndCountAll({
       order: [["createdAt"]],
       limit: req.limit,
@@ -94,20 +101,24 @@ const updateMessage = async (req, res) => {
       include: [
         {
           model: CampaignInfluencer,
-          include: [{
-            model:Campaign,
-            include:[User]
-          }],
+          include: [
+            {
+              model: Campaign,
+              include: [User],
+            },
+          ],
         },
       ],
     });
     if (req.body.approved) {
       // console.log(message.CampaignInfluencer.Campaign)
       await sendNewMessageAlert({
-        to:message.CampaignInfluencer?.Campaign?.User?.email || "johnvchuma@gmail.com",
-        username:message.CampaignInfluencer?.Campaign?.User?.name || "John",
-        subject:"New Message Alert"});
-    
+        to:
+          message.CampaignInfluencer?.Campaign?.User?.email ||
+          "johnvchuma@gmail.com",
+        username: message.CampaignInfluencer?.Campaign?.User?.name || "John",
+        subject: "New Message Alert",
+      });
     }
     const response = await message.update({
       ...req.body,
