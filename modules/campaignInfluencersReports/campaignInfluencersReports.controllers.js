@@ -70,11 +70,24 @@ const getAllCampaignInfluencerReports = async (req, res) => {
     const response = await CampaignInfluencerReport.findAndCountAll({
       limit: req.limit,
       offset: req.offset,
-      where: {
-        title: {
-          [Op.like]: `%${keyword}%`,
+      include: [
+        {
+          model: CampaignInfluencer,
+          include: [
+            {
+              model: Campaign,
+            },
+            {
+              model: User,
+              include: [
+                {
+                  model: InfluencerDetail,
+                },
+              ],
+            },
+          ],
         },
-      },
+      ],
     });
     successResponse(res, {
       count: response.count,
