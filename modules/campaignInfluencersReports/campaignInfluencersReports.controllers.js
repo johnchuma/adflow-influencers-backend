@@ -4,6 +4,7 @@ const {
   CampaignInfluencer,
   User,
   Campaign,
+  InfluencerDetail
 } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 
