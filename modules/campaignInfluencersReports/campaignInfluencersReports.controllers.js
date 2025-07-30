@@ -1,16 +1,19 @@
 const { Op, fn } = require("sequelize");
-const { CampaignInfluencerReport } = require("../../models");
+const {
+  CampaignInfluencerReport,
+  CampaignInfluencer,
+  User,
+  Campaign,
+} = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 
 const addCampaignInfluencerReport = async (req, res) => {
   try {
-    let {
-     url,
-     campaignInfluencerId
-    } = req.body;
-console.log(req.body)
+    let { url, campaignInfluencerId } = req.body;
+    console.log(req.body);
     const response = CampaignInfluencerReport.create({
-      url,campaignInfluencerId
+      url,
+      campaignInfluencerId,
     });
 
     successResponse(res, response);
@@ -32,6 +35,45 @@ const getCampaignInfluencerReports = async (req, res) => {
           [Op.like]: `%${keyword}%`,
         },
         userId: id,
+      },
+      include: [
+        {
+          model: CampaignInfluencer,
+          include: [
+            {
+              model: Campaign,
+            },
+            {
+              model: User,
+              include: [
+                {
+                  model: InfluencerDetail,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    successResponse(res, {
+      count: response.count,
+      page: req.page,
+      rows: response.rows,
+    });
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+const getAllCampaignInfluencerReports = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+    const response = await CampaignInfluencerReport.findAndCountAll({
+      limit: req.limit,
+      offset: req.offset,
+      where: {
+        title: {
+          [Op.like]: `%${keyword}%`,
+        },
       },
     });
     successResponse(res, {
@@ -94,6 +136,7 @@ module.exports = {
   addCampaignInfluencerReport,
   getCampaignInfluencerReports,
   deleteCampaignInfluencerReport,
+  getAllCampaignInfluencerReports,
   getCampaignInfluencerReport,
   updateCampaignInfluencerReport,
 };
