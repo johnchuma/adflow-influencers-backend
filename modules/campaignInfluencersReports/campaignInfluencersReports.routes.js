@@ -7,6 +7,7 @@ const {
   deleteCampaignInfluencerReport,
   getCampaignInfluencerReport,
   getAllCampaignInfluencerReports,
+  getInfluencerReportsByCampaign,
 } = require("./campaignInfluencersReports.controllers");
 const { getPagination } = require("../../utils/getPagination");
 
@@ -19,8 +20,9 @@ router.get(
   getPagination,
   getCampaignInfluencerReports
 );
+router.get("/campaign/:id", getPagination, getInfluencerReportsByCampaign);
 router.get("/", getAllCampaignInfluencerReports);
-router.get("/:id",  getCampaignInfluencerReport);
+router.get("/:id", getCampaignInfluencerReport);
 router.patch("/:id", updateCampaignInfluencerReport);
 router.delete("/:id", validateJWT, deleteCampaignInfluencerReport);
 

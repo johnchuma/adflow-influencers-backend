@@ -4,7 +4,7 @@ const {
   CampaignInfluencer,
   User,
   Campaign,
-  InfluencerDetail
+  InfluencerDetail,
 } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 
@@ -40,6 +40,46 @@ const getCampaignInfluencerReports = async (req, res) => {
       include: [
         {
           model: CampaignInfluencer,
+          include: [
+            {
+              model: Campaign,
+            },
+            {
+              model: User,
+              include: [
+                {
+                  model: InfluencerDetail,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    successResponse(res, {
+      count: response.count,
+      page: req.page,
+      rows: response.rows,
+    });
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+const getInfluencerReportsByCampaign = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+    const { id } = req.params;
+    const response = await CampaignInfluencerReport.findAndCountAll({
+      limit: req.limit,
+      offset: req.offset,
+      include: [
+        {
+          model: CampaignInfluencer,
+          required: true,
+          where: {
+            campaignId: id,
+          },
+
           include: [
             {
               model: Campaign,
@@ -152,5 +192,6 @@ module.exports = {
   deleteCampaignInfluencerReport,
   getAllCampaignInfluencerReports,
   getCampaignInfluencerReport,
+  getInfluencerReportsByCampaign,
   updateCampaignInfluencerReport,
 };
