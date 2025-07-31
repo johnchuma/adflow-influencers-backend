@@ -8,6 +8,7 @@ const {
   getCampaignInfluencerReport,
   getAllCampaignInfluencerReports,
   getInfluencerReportsByCampaign,
+  getInfluencerReportsByCampaignInfluencer,
 } = require("./campaignInfluencersReports.controllers");
 const { getPagination } = require("../../utils/getPagination");
 
@@ -21,6 +22,11 @@ router.get(
   getCampaignInfluencerReports
 );
 router.get("/campaign/:id", getPagination, getInfluencerReportsByCampaign);
+router.get(
+  "/campaign-influencer/:id",
+  getPagination,
+  getInfluencerReportsByCampaignInfluencer
+);
 router.get("/", getAllCampaignInfluencerReports);
 router.get("/:id", getCampaignInfluencerReport);
 router.patch("/:id", updateCampaignInfluencerReport);

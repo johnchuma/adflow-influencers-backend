@@ -12,8 +12,8 @@ module.exports = {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      url: {
-        type: DataTypes.STRING,
+      urls: {
+        type: DataTypes.JSON,
         allowNull: false,
       },
       isPublished: {

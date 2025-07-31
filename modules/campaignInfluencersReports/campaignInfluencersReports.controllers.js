@@ -7,13 +7,13 @@ const {
   InfluencerDetail,
 } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
+const { get } = require("http");
 
 const addCampaignInfluencerReport = async (req, res) => {
   try {
-    let { url, campaignInfluencerId } = req.body;
-    console.log(req.body);
-    const response = CampaignInfluencerReport.create({
-      url,
+    let { urls, campaignInfluencerId } = req.body;
+    const response = await CampaignInfluencerReport.create({
+      urls,
       campaignInfluencerId,
     });
 
@@ -80,6 +80,45 @@ const getInfluencerReportsByCampaign = async (req, res) => {
             campaignId: id,
           },
 
+          include: [
+            {
+              model: Campaign,
+            },
+            {
+              model: User,
+              include: [
+                {
+                  model: InfluencerDetail,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    successResponse(res, {
+      count: response.count,
+      page: req.page,
+      rows: response.rows,
+    });
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+const getInfluencerReportsByCampaignInfluencer = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+    const { id } = req.params;
+    const response = await CampaignInfluencerReport.findAndCountAll({
+      limit: req.limit,
+      offset: req.offset,
+      include: [
+        {
+          model: CampaignInfluencer,
+          required: true,
+          where: {
+            id: id,
+          },
           include: [
             {
               model: Campaign,
@@ -194,4 +233,5 @@ module.exports = {
   getCampaignInfluencerReport,
   getInfluencerReportsByCampaign,
   updateCampaignInfluencerReport,
+  getInfluencerReportsByCampaignInfluencer,
 };
