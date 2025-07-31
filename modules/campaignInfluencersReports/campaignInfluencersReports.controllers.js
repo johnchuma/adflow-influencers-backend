@@ -1,4 +1,4 @@
-const { Op, fn } = require("sequelize");
+const { Op, fn, where } = require("sequelize");
 const {
   CampaignInfluencerReport,
   CampaignInfluencer,
@@ -72,6 +72,9 @@ const getInfluencerReportsByCampaign = async (req, res) => {
     const response = await CampaignInfluencerReport.findAndCountAll({
       limit: req.limit,
       offset: req.offset,
+      where: {
+        isPublished: true,
+      },
       include: [
         {
           model: CampaignInfluencer,
