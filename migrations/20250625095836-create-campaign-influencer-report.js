@@ -20,6 +20,18 @@ module.exports = {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      postUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      postDate: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      instagramVideoDuration: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+      },
       instagramTotalViews: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -137,6 +149,7 @@ module.exports = {
         type: DataTypes.STRING, // Store as string (e.g., '1h:9m:31s')
         allowNull: true,
       },
+
       tiktokAvgWatchTime: {
         type: DataTypes.STRING, // Store as string (e.g., '8.3s')
         allowNull: true,

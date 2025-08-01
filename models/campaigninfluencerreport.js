@@ -31,6 +31,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      postUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      postDate:{
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      instagramVideoDuration: {
+        type: DataTypes.FLOAT,
+        allowNull: true,
+      },
       instagramTotalViews: {
         type: DataTypes.INTEGER,
         allowNull: true,
