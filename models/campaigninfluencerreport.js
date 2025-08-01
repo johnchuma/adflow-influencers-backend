@@ -31,11 +31,19 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      postUrl: {
+      instagramPostUrl: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      postDate:{
+      instagramPostDate: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
+      tiktokPostUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      tiktokPostDate: {
         type: DataTypes.DATE,
         allowNull: true,
       },
