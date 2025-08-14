@@ -246,7 +246,20 @@ const getMyInfo = async (req, res) => {
     errorResponse(res, error);
   }
 };
-
+const getUserInfo = async (req, res) => {
+  try {
+    const { id } = req.user;
+    const user = await User.findOne({
+      where: {
+        id,
+      },
+      include: [ClientDetail],
+    });
+    successResponse(res, user);
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
 const deleteUser = async (req, res) => {
   try {
     const { uuid } = req.params;
@@ -272,10 +285,10 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { uuid } = req.params;
+    const { id } = req.params;
     const user = await User.findOne({
       where: {
-        uuid,
+        id,
       },
     });
     const response = await user.update({
@@ -323,10 +336,10 @@ const getUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    const { uuid } = req.params;
+    const { id } = req.params;
     const user = await User.findOne({
       where: {
-        uuid,
+        id,
       },
       include: [
         {
