@@ -109,7 +109,7 @@ const sendCode = async (req, res) => {
         ],
       },
     });
-    log(user);
+    console.log(user);
     if (user) {
       const code = randomNumber();
       let wr;
