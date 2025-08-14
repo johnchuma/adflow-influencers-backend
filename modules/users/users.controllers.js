@@ -196,14 +196,24 @@ const confirmCode = async (req, res) => {
 const getInfluencers = async (req, res) => {
   try {
     const { keyword } = req.query;
-
     console.log(keyword, req.limit, req.offset);
     console.log(req.limit);
     const response = await User.findAndCountAll({
       limit: req.limit,
       offset: req.offset,
       where: {
-        [Op.or]: [{}],
+          [Op.or]: [
+              {
+                name: {
+                  [Op.like]: `%${keyword}%`,
+                },
+              },
+              Sequelize.literal(`EXISTS (
+                SELECT 1 FROM InfluencerDetails 
+                WHERE InfluencerDetails.userId = User.id 
+                AND InfluencerDetails.instagramHandle LIKE '%${keyword.replace(/'/g, "''")}%'
+              )`),
+            ],
       },
       include: [
         {
