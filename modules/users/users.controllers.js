@@ -99,16 +99,16 @@ const sendCode = async (req, res) => {
     console.log(phone, email);
     let user = await User.findOne({
       where: {
-        [Op.or]: [
-          {
-            phone: phone || "",
-          },
-          {
-            email: email || "",
-          },
-        ],
+        phone: phone || "",
       },
     });
+    if (!user) {
+      user = await User.findOne({
+        where: {
+          email: email || "",
+        },
+      });
+    }
     if (user) {
       const code = randomNumber();
       let wr;
