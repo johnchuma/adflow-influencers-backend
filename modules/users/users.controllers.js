@@ -44,6 +44,9 @@ const addUser = async (req, res) => {
       let wr;
       if (phone) {
         wr = await sendWhatsappAuthSMS({ phone, token: code });
+        await InfluencerDetail.create({
+          userId: user.id,
+        });
       } else {
         wr = await sendOTPEmail({
           to: email,
@@ -88,12 +91,12 @@ const sendCode = async (req, res) => {
   try {
     let { phone, email } = req.body;
     let isAdmin = false;
-    console.log(phone,email)
-     isAdmin = phone?.includes("@admin") || email?.includes(".admin");
-     phone = phone?.replace("@admin", "") ;
-     email = email?.replace(".admin", "");
-    
-    console.log(phone,email)
+    console.log(phone, email);
+    isAdmin = phone?.includes("@admin") || email?.includes(".admin");
+    phone = phone?.replace("@admin", "");
+    email = email?.replace(".admin", "");
+
+    console.log(phone, email);
     let user = await User.findOne({
       where: {
         [Op.or]: [
@@ -116,7 +119,7 @@ const sendCode = async (req, res) => {
         });
       } else {
         wr = await sendOTPEmail({
-          to: isAdmin?"herman@adflow.africa": email,
+          to: isAdmin ? "herman@adflow.africa" : email,
           otp: code,
           subject: "Confirmation Code",
           username: user.name,
@@ -140,10 +143,10 @@ const sendCode = async (req, res) => {
 };
 const confirmCode = async (req, res) => {
   try {
-     let { phone, email, code } = req.body;
-     console.log(req.body);
-     phone = phone?.replace("@admin", "");
-     email = email?.replace(".admin", "");
+    let { phone, email, code } = req.body;
+    console.log(req.body);
+    phone = phone?.replace("@admin", "");
+    email = email?.replace(".admin", "");
     let user = await User.findOne({
       where: {
         [Op.or]: [
@@ -234,7 +237,6 @@ const getMyInfo = async (req, res) => {
     errorResponse(res, error);
   }
 };
-
 
 const deleteUser = async (req, res) => {
   try {
