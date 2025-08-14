@@ -101,10 +101,10 @@ const sendCode = async (req, res) => {
       where: {
         [Op.or]: [
           {
-            phone: phone,
+            phone: phone || "",
           },
           {
-            email: email,
+            email: email || "",
           },
         ],
       },
