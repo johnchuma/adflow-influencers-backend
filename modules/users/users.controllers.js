@@ -240,13 +240,13 @@ const getMyInfo = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { uuid } = req.params;
     const { phone } = req.query;
     const user = await User.findOne({
       where: {
         [Op.or]: [
           {
-            id,
+            uuid,
           },
           {
             phone,
@@ -263,10 +263,10 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { uuid } = req.params;
     const user = await User.findOne({
       where: {
-        id,
+        uuid,
       },
     });
     const response = await user.update({
@@ -277,9 +277,167 @@ const updateUser = async (req, res) => {
     errorResponse(res, error);
   }
 };
+const getUsers = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+    const { path } = req.params;
+
+    console.log(keyword, req.limit, req.offset);
+    const response = await User.findAndCountAll({
+      limit: req.limit,
+      offset: req.offset,
+      where: {
+        name: {
+          [Op.like]: `%${keyword || ''}%`,
+        },
+      },
+      include: [
+        {
+          model: InfluencerDetail,
+          required: false,
+        },
+        {
+          model: ClientDetail,
+          required: false,
+        },
+      ],
+    });
+    successResponse(res, {
+      count: response.count,
+      page: req.page,
+      rows: response.rows,
+    });
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+
+const getUser = async (req, res) => {
+  try {
+    const { uuid } = req.params;
+    const user = await User.findOne({
+      where: {
+        uuid,
+      },
+      include: [
+        {
+          model: InfluencerDetail,
+          required: false,
+        },
+        {
+          model: ClientDetail,
+          required: false,
+        },
+      ],
+    });
+    successResponse(res, user);
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+
+const getPublishers = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+
+    console.log(keyword, req.limit, req.offset);
+    const response = await User.findAndCountAll({
+      limit: req.limit,
+      offset: req.offset,
+      where: {
+        name: {
+          [Op.like]: `%${keyword || ''}%`,
+        },
+        role: 'publisher',
+      },
+      include: [
+        {
+          model: ClientDetail,
+          required: false,
+        },
+      ],
+    });
+    successResponse(res, {
+      count: response.count,
+      page: req.page,
+      rows: response.rows,
+    });
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+
+const getAdvertisers = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+
+    console.log(keyword, req.limit, req.offset);
+    const response = await User.findAndCountAll({
+      limit: req.limit,
+      offset: req.offset,
+      where: {
+        name: {
+          [Op.like]: `%${keyword || ''}%`,
+        },
+        role: 'advertiser',
+      },
+      include: [
+        {
+          model: ClientDetail,
+          required: false,
+        },
+      ],
+    });
+    successResponse(res, {
+      count: response.count,
+      page: req.page,
+      rows: response.rows,
+    });
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+
+const getCampaignInfluencers = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+    const { path } = req.params; // This might contain campaign ID or other params
+
+    console.log(keyword, req.limit, req.offset);
+    const response = await User.findAndCountAll({
+      limit: req.limit,
+      offset: req.offset,
+      where: {
+        name: {
+          [Op.like]: `%${keyword || ''}%`,
+        },
+        role: 'influencer',
+      },
+      include: [
+        {
+          model: InfluencerDetail,
+          required: true,
+        },
+      ],
+    });
+    successResponse(res, {
+      count: response.count,
+      page: req.page,
+      rows: response.rows,
+    });
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+
 module.exports = {
   addUser,
   getInfluencers,
+  getUsers,
+  getUser,
+  getPublishers,
+  getAdvertisers,
+  getCampaignInfluencers,
   confirmCode,
   deleteUser,
   getMyInfo,
