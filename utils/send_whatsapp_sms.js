@@ -52,7 +52,7 @@ const sendWhatsappAuthSMS = async ({ phone, token }) => {
     return error.response.data;
   }
 };
-const sendWhatsappMessageAlert = async ({ phone, name, link,from }) => {
+const sendWhatsappMessageAlert = async ({ phone, name, link, from }) => {
   try {
     const payload = {
       messaging_product: "whatsapp",
@@ -85,7 +85,7 @@ const sendWhatsappMessageAlert = async ({ phone, name, link,from }) => {
         ],
       },
     };
-    console.log(payload);
+    // console.log(payload);
     const response = await axios.post(
       `https://graph.facebook.com/v22.0/${process.env.ADFLOW_WHATSAPP_NUMBER_ID}/messages`,
       payload,
