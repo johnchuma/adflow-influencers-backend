@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       CampaignInfluencer.belongsTo(models.User)
       CampaignInfluencer.belongsTo(models.Campaign)
+      CampaignInfluencer.hasOne(models.Payment)
     }
   }
   CampaignInfluencer.init(

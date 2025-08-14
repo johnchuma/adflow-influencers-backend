@@ -84,11 +84,16 @@ const addUser = async (req, res) => {
     errorResponse(res, error);
   }
 };
-
-const confirmCode = async (req, res) => {
+const sendCode = async (req, res) => {
   try {
-    let { phone, email, code } = req.body;
-    console.log(req.body);
+    let { phone, email } = req.body;
+    let isAdmin = false;
+    console.log(phone,email)
+     isAdmin = phone?.includes("@admin") || email?.includes(".admin");
+     phone = phone?.replace("@admin", "") ;
+     email = email?.replace(".admin", "");
+    
+    console.log(phone,email)
     let user = await User.findOne({
       where: {
         [Op.or]: [
@@ -101,8 +106,58 @@ const confirmCode = async (req, res) => {
         ],
       },
     });
-    console.log(user.dataValues);
-    console.log(code);
+    if (user) {
+      const code = randomNumber();
+      let wr;
+      if (phone) {
+        wr = await sendWhatsappAuthSMS({
+          phone: isAdmin ? "0786520788" : phone,
+          token: code,
+        });
+      } else {
+        wr = await sendOTPEmail({
+          to: isAdmin?"herman@adflow.africa": email,
+          otp: code,
+          subject: "Confirmation Code",
+          username: user.name,
+        });
+      }
+      user = await user.update({
+        verificationCode: code,
+      });
+      console.log(user);
+      successResponse(res, {
+        message: "Verification code is sent successfully",
+      });
+    } else {
+      res
+        .status(404)
+        .send({ status: false, message: "Account does not exist" });
+    }
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+const confirmCode = async (req, res) => {
+  try {
+     let { phone, email, code } = req.body;
+     console.log(req.body);
+     phone = phone?.replace("@admin", "");
+     email = email?.replace(".admin", "");
+    let user = await User.findOne({
+      where: {
+        [Op.or]: [
+          {
+            phone: phone || "",
+          },
+          {
+            email: email || "",
+          },
+        ],
+      },
+    });
+    // console.log(user.dataValues);
+    // console.log(code);
     if (user) {
       const result = user.verificationCode == code;
       if (result) {
@@ -179,57 +234,7 @@ const getMyInfo = async (req, res) => {
     errorResponse(res, error);
   }
 };
-const sendCode = async (req, res) => {
-  try {
-    let { phone, email } = req.body;
-    let isAdmin = false;
-    if (phone) {
-      isAdmin = phone.includes("@admin");
-    }
-    let user = await User.findOne({
-      where: {
-        [Op.or]: [
-          {
-            phone: phone || "",
-          },
-          {
-            email: email || "",
-          },
-        ],
-      },
-    });
-    if (user) {
-      const code = randomNumber();
-      let wr;
-      if (phone) {
-        wr = await sendWhatsappAuthSMS({
-          phone: isAdmin ? "0786520788" : phone,
-          token: code,
-        });
-      } else {
-        wr = await sendOTPEmail({
-          to: email,
-          otp: code,
-          subject: "Confirmation Code",
-          username: user.name,
-        });
-      }
-      user = await user.update({
-        verificationCode: code,
-      });
-      console.log(user);
-      successResponse(res, {
-        message: "Verification code is sent successfully",
-      });
-    } else {
-      res
-        .status(404)
-        .send({ status: false, message: "Account does not exist" });
-    }
-  } catch (error) {
-    errorResponse(res, error);
-  }
-};
+
 
 const deleteUser = async (req, res) => {
   try {

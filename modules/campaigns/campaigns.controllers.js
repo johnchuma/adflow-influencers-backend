@@ -85,7 +85,7 @@ const getClientCampaigns = async (req, res) => {
     successResponse(res, {
       count: response.count,
       page: req.page,
-      rows: response.rows,
+      rows: response.rows
     });
   } catch (error) {
     errorResponse(res, error);

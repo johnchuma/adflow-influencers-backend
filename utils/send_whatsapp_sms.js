@@ -52,7 +52,7 @@ const sendWhatsappAuthSMS = async ({ phone, token }) => {
     return error.response.data;
   }
 };
-const sendWhatsappMessageAlert = async ({ phone, name, link }) => {
+const sendWhatsappMessageAlert = async ({ phone, name, link,from }) => {
   try {
     const payload = {
       messaging_product: "whatsapp",
@@ -75,6 +75,10 @@ const sendWhatsappMessageAlert = async ({ phone, name, link }) => {
               {
                 type: "text",
                 text: link,
+              },
+              {
+                type: "text",
+                text: from,
               },
             ],
           },

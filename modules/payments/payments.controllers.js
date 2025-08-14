@@ -4,9 +4,9 @@ const { errorResponse, successResponse } = require("../../utils/responses");
 
 const addPayment = async (req, res) => {
   try {
-    let { amount,campaignId} = req.body;
+    let { amount,campaignInfluencerId} = req.body;
     const response = Payment.create({
-    amount,campaignId
+    amount,campaignInfluencerId
     });
 
     successResponse(res, response);
@@ -22,17 +22,14 @@ const getPayments = async (req, res) => {
     const response = await Payment.findAndCountAll({
       limit: req.limit,
       offset: req.offset,
-      include:[{
-        model:Campaign,
         include:[{
           model:CampaignInfluencer,
           where:{
             userId:id
           },
           required:true
-        }],
-      
-      }]
+        }]
+    
     });
     successResponse(res, {
       count: response.count,

@@ -16,9 +16,10 @@ module.exports = {
         type: DataTypes.ENUM("PENDING","COMPLETED"),
         defaultValue:"PENDING"
       },
-      campaignId:{
+      campaignInfluencerId:{
         type: DataTypes.UUID,
-        allowNull:false
+        allowNull:false,
+        unique:true
       },
       createdAt: {
         allowNull: false,

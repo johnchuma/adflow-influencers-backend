@@ -17,8 +17,40 @@ const storage = multer.diskStorage({
   },
 });
 
-// Multer upload configuration
-const upload = multer({ storage: storage });
+// Multer upload configuration with file size limits and file type filtering
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 100 * 1024 * 1024, // 100MB limit for video files
+    fieldSize: 25 * 1024 * 1024   // 25MB for other form fields
+  },
+  fileFilter: (req, file, cb) => {
+    // Allow images, videos, and other common file types
+    const allowedMimes = [
+      'image/jpeg',
+      'image/jpg', 
+      'image/png',
+      'image/gif',
+      'image/svg+xml',
+      'video/mp4',
+      'video/mpeg',
+      'video/quicktime',
+      'video/x-msvideo', // .avi
+      'video/x-ms-wmv',  // .wmv
+      'application/zip',
+      'application/x-zip-compressed',
+      'application/pdf',
+      'text/plain',
+      'application/octet-stream'
+    ];
+    
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error(`File type ${file.mimetype} not allowed. Please upload images, videos, PDFs, or zip files.`), false);
+    }
+  }
+});
 
 // Middleware to handle both normal files and zip files
 const handleFileUpload = (req, res, next) => {

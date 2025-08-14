@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Payment.init({
-   id: {
+     id: {
         primaryKey: true,
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -28,9 +28,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM("PENDING","COMPLETED"),
         defaultValue:"PENDING"
       },
-      campaignId:{
+      campaignInfluencerId:{
         type: DataTypes.UUID,
-        allowNull:false
+        allowNull:false,
+        unique:true
       },
   }, {
     sequelize,

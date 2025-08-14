@@ -37,9 +37,17 @@ app.use((req, res, next) => {
 });
 
 // John
-app.use(express.json());
-app.use(cors());
-app.use(bodyParser.text({ type: "text/plain" }));
+app.use(express.json({ limit: '100mb' })); // Increase JSON payload limit
+app.use(express.urlencoded({ limit: '100mb', extended: true })); // Add URL encoded support
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT","PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "Content-Length", "X-Requested-With"],
+  exposedHeaders: ["Content-Length", "Content-Type"],
+  credentials: false,
+  maxAge: 86400 // Cache preflight response for 24 hours
+}));
+app.use(bodyParser.text({ type: "text/plain", limit: '100mb' }));
 
 // API Routes
 app.use("/users", UsersRoutes);
@@ -62,11 +70,51 @@ app.get("/", (req, res) => {
   }
 });
 
+
+
 app.post("/upload-file", upload.single("file"), async (req, res) => {
   try {
+    // Check if file was uploaded
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "No file uploaded"
+      });
+    }
+
+    console.log("File uploaded:", {
+      filename: req.file.filename,
+      mimetype: req.file.mimetype,
+      size: req.file.size
+    });
+
     const url = await getUrl(req);
     successResponse(res, url);
   } catch (error) {
+    console.error("Upload error:", error);
+    
+    // Handle multer-specific errors
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({
+        success: false,
+        message: "File too large. Maximum size is 100MB."
+      });
+    }
+    
+    if (error.code === 'LIMIT_UNEXPECTED_FILE') {
+      return res.status(400).json({
+        success: false,
+        message: "Unexpected file field. Use 'file' as the field name."
+      });
+    }
+
+    if (error.message && error.message.includes('File type')) {
+      return res.status(400).json({
+        success: false,
+        message: error.message
+      });
+    }
+
     errorResponse(res, error);
   }
 });

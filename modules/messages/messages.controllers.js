@@ -25,6 +25,8 @@ const addMessage = async (req, res) => {
       phone: "0786520788",
       name: "Herman",
       link: "https://dashboard.adflow.africa/messages",
+      from:req.user.name
+      
     });
     successResponse(res, response);
   } catch (error) {
@@ -33,19 +35,29 @@ const addMessage = async (req, res) => {
   }
 };
 
+
 const getMessages = async (req, res) => {
   try {
-    const { keyword } = req.query;
     const { campaignInfluencerId } = req.params;
-    console.log()
+    const user = req.user;
+    
+    const whereClause = {
+      campaignInfluencerId,
+      [Op.or]: [
+        { userId: user.id }, // User's own messages, regardless of approval
+        { approved: true },  // Approved messages from any user
+      ],
+    };
+
+  
+
     const response = await Message.findAndCountAll({
-      order: [["createdAt"]],
+      order: [['createdAt', 'DESC']], // Sort by createdAt in descending order
       limit: req.limit,
       offset: req.offset,
-      where: {
-        campaignInfluencerId,
-      },
+      where: whereClause,
     });
+
     successResponse(res, {
       count: response.count,
       page: req.page,
@@ -55,7 +67,6 @@ const getMessages = async (req, res) => {
     errorResponse(res, error);
   }
 };
-
 const getMessage = async (req, res) => {
   try {
     const { id } = req.params;

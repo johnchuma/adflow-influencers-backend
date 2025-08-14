@@ -1,5 +1,5 @@
 const { Op, fn } = require("sequelize");
-const { CampaignInfluencer,Campaign,User,InfluencerDetail } = require("../../models");
+const { CampaignInfluencer,Campaign,User,InfluencerDetail,Payment } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 
 const addCampaignInfluencer = async (req, res) => {
@@ -164,6 +164,9 @@ const getCampaignInfluencer = async (req, res) => {
       where: {
         id,
       },
+      include:[{
+        model:Payment
+      }]
     });
     successResponse(res, data);
   } catch (error) {
