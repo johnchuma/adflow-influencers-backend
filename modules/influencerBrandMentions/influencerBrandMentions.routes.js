@@ -1,5 +1,4 @@
 const { Router } = require("express");
-const { validateJWT } = require("../../utils/validateJWT");
 const { getPagination } = require("../../utils/getPagination");
 const {
   addInfluencerBrandMention,
@@ -11,10 +10,10 @@ const {
 
 const router = Router();
 
-router.post("/", validateJWT, addInfluencerBrandMention);
-router.get("/", validateJWT, getPagination, getInfluencerBrandMentions);
-router.get("/:id", validateJWT, getInfluencerBrandMention);
-router.patch("/:id", validateJWT, editInfluencerBrandMention);
-router.delete("/:id", validateJWT, deleteInfluencerBrandMention);
+router.post("/", addInfluencerBrandMention);
+router.get("/", getPagination, getInfluencerBrandMentions);
+router.get("/:id", getInfluencerBrandMention);
+router.patch("/:id", editInfluencerBrandMention);
+router.delete("/:id", deleteInfluencerBrandMention);
 
 module.exports = router;
