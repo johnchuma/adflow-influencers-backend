@@ -50,16 +50,12 @@ const influencerOverviewStats = async(req,res)=>{
    
     totalEarning = await Payment.sum("amount",{
         include:[{
-        model:Campaign,
-        attributes:[],
-        include:[{
             model:CampaignInfluencer,
             attributes:[],
             where:{
                 userId:id
             },
             required:true
-        }]
         }]
     })
     successResponse(res,{activeBriefs,completedCampaigns,totalEarning:totalEarning||0,avgRating})

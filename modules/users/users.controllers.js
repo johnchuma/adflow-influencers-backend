@@ -202,9 +202,18 @@ const getInfluencers = async (req, res) => {
       limit: req.limit,
       offset: req.offset,
       where: {
-        name: {
-          [Op.like]: `%${keyword}%`,
-        },
+          [Op.or]: [
+              {
+                name: {
+                  [Op.like]: `%${keyword}%`,
+                },
+              },
+              Sequelize.literal(`EXISTS (
+                SELECT 1 FROM InfluencerDetails 
+                WHERE InfluencerDetails.userId = User.id 
+                AND InfluencerDetails.instagramHandle LIKE '%${keyword.replace(/'/g, "''")}%'
+              )`),
+            ],
       },
       include: [
         {
