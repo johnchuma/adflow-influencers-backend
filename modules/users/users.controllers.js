@@ -44,9 +44,6 @@ const addUser = async (req, res) => {
       let wr;
       if (phone) {
         wr = await sendWhatsappAuthSMS({ phone, token: code });
-        await InfluencerDetail.create({
-          userId: user.id,
-        });
       } else {
         wr = await sendOTPEmail({
           to: email,
@@ -66,6 +63,10 @@ const addUser = async (req, res) => {
         await ClientDetail.create({
           userId: user.id,
           company,
+        });
+      } else {
+        await InfluencerDetail.create({
+          userId: user.id,
         });
       }
       await axios
