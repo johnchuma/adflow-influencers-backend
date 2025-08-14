@@ -3,6 +3,7 @@ const {
   User,
   InfluencerDetail,
   BusinessCategory,
+  InfluencerBrandMention,
   Sequelize,
   ClientDetail,
 } = require("../../models");
@@ -258,7 +259,7 @@ const getUserInfo = async (req, res) => {
       where: {
         id,
       },
-      include: [InfluencerDetail],
+      include: [InfluencerDetail, InfluencerBrandMention],
     });
     successResponse(res, user);
   } catch (error) {
