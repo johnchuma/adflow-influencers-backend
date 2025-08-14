@@ -202,18 +202,21 @@ const getInfluencers = async (req, res) => {
       limit: req.limit,
       offset: req.offset,
       where: {
-          [Op.or]: [
-              {
-                name: {
-                  [Op.like]: `%${keyword}%`,
-                },
-              },
-              Sequelize.literal(`EXISTS (
+        [Op.or]: [
+          {
+            name: {
+              [Op.like]: `%${keyword}%`,
+            },
+          },
+          Sequelize.literal(`EXISTS (
                 SELECT 1 FROM InfluencerDetails 
                 WHERE InfluencerDetails.userId = User.id 
-                AND InfluencerDetails.instagramHandle LIKE '%${keyword.replace(/'/g, "''")}%'
+                AND InfluencerDetails.instagramHandle LIKE '%${keyword.replace(
+                  /'/g,
+                  "''"
+                )}%'
               )`),
-            ],
+        ],
       },
       include: [
         {
@@ -253,7 +256,7 @@ const getUserInfo = async (req, res) => {
       where: {
         id,
       },
-      include: [ClientDetail],
+      include: [InfluencerDetail],
     });
     successResponse(res, user);
   } catch (error) {
@@ -305,6 +308,7 @@ module.exports = {
   confirmCode,
   deleteUser,
   getMyInfo,
+  getUserInfo,
   sendCode,
   updateUser,
 };
