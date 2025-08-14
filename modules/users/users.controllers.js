@@ -253,7 +253,7 @@ const getMyInfo = async (req, res) => {
 };
 const getUserInfo = async (req, res) => {
   try {
-    const { id } = req.user;
+    const { id } = req.params;
     const user = await User.findOne({
       where: {
         id,
