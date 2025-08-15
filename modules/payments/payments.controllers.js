@@ -1,12 +1,14 @@
 const { Op, fn } = require("sequelize");
-const { Payment,Campaign,CampaignInfluencer } = require("../../models");
+const { Payment, Campaign, CampaignInfluencer } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 
 const addPayment = async (req, res) => {
   try {
-    let { amount,campaignInfluencerId} = req.body;
-    const response = Payment.create({
-    amount,campaignInfluencerId
+    let { amount, campaignInfluencerId, status } = req.body;
+    const response = await Payment.create({
+      amount,
+      campaignInfluencerId,
+      status,
     });
 
     successResponse(res, response);
@@ -18,25 +20,26 @@ const addPayment = async (req, res) => {
 
 const getPayments = async (req, res) => {
   try {
-    const {id} = req.user;
+    const { id } = req.user;
     const response = await Payment.findAndCountAll({
       limit: req.limit,
       offset: req.offset,
-        include:[{
-          model:CampaignInfluencer,
-          where:{
-            userId:id
+      include: [
+        {
+          model: CampaignInfluencer,
+          where: {
+            userId: id,
           },
-          required:true
-        }]
-    
+          required: true,
+        },
+      ],
     });
     successResponse(res, {
       count: response.count,
       page: req.page,
-      thisMonthEarnings:0,
-      pendingEarnings:0,
-      totalEarnings:0,
+      thisMonthEarnings: 0,
+      pendingEarnings: 0,
+      totalEarnings: 0,
       rows: response.rows,
     });
   } catch (error) {

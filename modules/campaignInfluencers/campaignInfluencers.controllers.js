@@ -1,5 +1,11 @@
 const { Op, fn } = require("sequelize");
-const { CampaignInfluencer,Campaign,User,InfluencerDetail,Payment } = require("../../models");
+const {
+  CampaignInfluencer,
+  Campaign,
+  User,
+  InfluencerDetail,
+  Payment,
+} = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 
 const addCampaignInfluencer = async (req, res) => {
@@ -46,6 +52,7 @@ const getCampaignInfluencers = async (req, res) => {
         },
         userId: id,
       },
+      include: [Payment],
     });
     successResponse(res, {
       count: response.count,
@@ -59,29 +66,29 @@ const getCampaignInfluencers = async (req, res) => {
 const getInfluencerPendingApplications = async (req, res) => {
   try {
     const { id } = req.user;
-    const {campaignId} = req.query
-    console.log(campaignId)
+    const { campaignId } = req.query;
+    console.log(campaignId);
 
     const response = await CampaignInfluencer.findAndCountAll({
       limit: req.limit,
       offset: req.offset,
-      include:[
-         {
-          model:Campaign,
-          where:{
-            id:campaignId
-          }
-        
-      },{
-        model:User,//influencer
-        include:[InfluencerDetail]
-    
-      }],
+      include: [
+        {
+          model: Campaign,
+          where: {
+            id: campaignId,
+          },
+        },
+        {
+          model: User, //influencer
+          include: [InfluencerDetail],
+        },
+      ],
       where: {
-       status:"PENDING"
+        status: "PENDING",
       },
     });
-    console.log("count",response.count)
+    console.log("count", response.count);
     successResponse(res, {
       count: response.count,
       page: req.page,
@@ -94,25 +101,25 @@ const getInfluencerPendingApplications = async (req, res) => {
 const getInfluencerApprovedApplications = async (req, res) => {
   try {
     const { id } = req.user;
-    const {campaignId} = req.query
-    console.log(campaignId)
+    const { campaignId } = req.query;
+    console.log(campaignId);
     const response = await CampaignInfluencer.findAndCountAll({
       limit: req.limit,
       offset: req.offset,
-      include:[
-         {
-          model:Campaign,
-          where:{
-            id:campaignId
-          }
-         }
-      ,{
-        model:User,//influencer
-        include:[InfluencerDetail]
-    
-      }],
+      include: [
+        {
+          model: Campaign,
+          where: {
+            id: campaignId,
+          },
+        },
+        {
+          model: User, //influencer
+          include: [InfluencerDetail],
+        },
+      ],
       where: {
-       status:"APPROVED"
+        status: "APPROVED",
       },
     });
     successResponse(res, {
@@ -127,25 +134,26 @@ const getInfluencerApprovedApplications = async (req, res) => {
 const getInfluencerRejectedApplications = async (req, res) => {
   try {
     const { id } = req.user;
-    const {campaignId} = req.query
-    console.log(campaignId)
+    const { campaignId } = req.query;
+    console.log(campaignId);
 
     const response = await CampaignInfluencer.findAndCountAll({
       limit: req.limit,
       offset: req.offset,
-      include:[{
-          model:Campaign,
-          where:{
-            id:campaignId
-          }
-        
-      },{
-        model:User,//influencer
-        include:[InfluencerDetail]
-    
-      }],
+      include: [
+        {
+          model: Campaign,
+          where: {
+            id: campaignId,
+          },
+        },
+        {
+          model: User, //influencer
+          include: [InfluencerDetail],
+        },
+      ],
       where: {
-       status:"REJECTED"
+        status: "REJECTED",
       },
     });
     successResponse(res, {
@@ -164,9 +172,11 @@ const getCampaignInfluencer = async (req, res) => {
       where: {
         id,
       },
-      include:[{
-        model:Payment
-      }]
+      include: [
+        {
+          model: Payment,
+        },
+      ],
     });
     successResponse(res, data);
   } catch (error) {
@@ -177,7 +187,7 @@ const getCampaignInfluencer = async (req, res) => {
 const updateCampaignInfluencer = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id)
+    console.log(id);
     const data = await CampaignInfluencer.findOne({
       where: {
         id,
