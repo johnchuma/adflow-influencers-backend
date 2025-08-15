@@ -17,6 +17,7 @@ const NotificationsRoutes = require("./modules/notifications/notifications.route
 const InfluencerDetailsRoutes = require("./modules/influencerDetails/influencerDetails.routes");
 const CampaignInfluencerReportRoutes = require("./modules/campaignInfluencersReports/campaignInfluencersReports.routes");
 const CampaignInfluencersRoutes = require("./modules/campaignInfluencers/campaignInfluencers.routes");
+const PaymentsRoutes = require("./modules/payments/payments.routes");
 const { successResponse, errorResponse } = require("./utils/responses");
 const { upload } = require("./utils/upload");
 const { getUrl } = require("./utils/get_url");
@@ -57,6 +58,7 @@ app.use("/messages", MessagesRoutes);
 app.use("/invoices", InvoicesRoutes);
 app.use("/campaigns", CampaignsRoutes);
 app.use("/stats", StatsRoutes);
+app.use("/payments", PaymentsRoutes);
 app.use("/influencer-brand-mentions", InfluencerBrandMentionsRoutes);
 app.use("/banners", BannerRoutes);
 app.use("/influencer-details", InfluencerDetailsRoutes);
