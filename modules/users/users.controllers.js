@@ -6,6 +6,8 @@ const {
   InfluencerBrandMention,
   Sequelize,
   ClientDetail,
+  InfluencerGroupMember,
+  InfluencersGroup,
 } = require("../../models");
 const { generateJwtTokens } = require("../../utils/generateJwtTokens");
 const { errorResponse, successResponse } = require("../../utils/responses");
@@ -225,6 +227,16 @@ const getInfluencers = async (req, res) => {
         {
           model: InfluencerDetail,
           required: true,
+          attributes: {
+            exclude: ["UserId"],
+          },
+        },
+        {
+          model: InfluencerGroupMember,
+          include: [InfluencersGroup],
+          attributes: {
+            exclude: ["UserId", "InfluencersGroupId"],
+          },
         },
       ],
     });

@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       User.hasOne(models.InfluencerDetail);
       User.hasOne(models.ClientDetail);
       User.hasMany(models.InfluencerBrandMention);
+      User.hasMany(models.InfluencerGroupMember, {
+        foreignKey: "userId",
+      });
     }
   }
   User.init(

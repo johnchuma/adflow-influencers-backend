@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class InfluencerDetail extends Model {
     /**
@@ -11,11 +9,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      InfluencerDetail.belongsTo(models.User)
+      InfluencerDetail.belongsTo(models.User, {
+        foreignKey: "userId",
+        onDelete: "CASCADE",
+      });
     }
   }
-  InfluencerDetail.init({
-    id: {
+  InfluencerDetail.init(
+    {
+      id: {
         allowNull: false,
         primaryKey: true,
         type: DataTypes.UUID,
@@ -30,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT("long"),
         allowNull: true,
       },
-       category: {
+      category: {
         type: DataTypes.STRING,
         allowNull: true,
       },
@@ -124,9 +126,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.JSON,
         defaultValue: {},
       },
-  }, {
-    sequelize,
-    modelName: 'InfluencerDetail',
-  });
+    },
+    {
+      sequelize,
+      modelName: "InfluencerDetail",
+    }
+  );
   return InfluencerDetail;
 };
