@@ -47,12 +47,30 @@ const getCampaignInfluencers = async (req, res) => {
       limit: req.limit,
       offset: req.offset,
       where: {
-        title: {
-          [Op.like]: `%${keyword}%`,
-        },
+        [Op.or]: [
+          {
+            title: {
+              [Op.like]: `%${keyword || ""}%`,
+            },
+          },
+          {
+            "$Campaign.title$": {
+              [Op.like]: `%${keyword || ""}%`,
+            },
+          },
+        ],
         userId: id,
       },
-      include: [Payment],
+      include: [
+        {
+          model: Campaign,
+          required: true,
+        },
+        {
+          model: Payment,
+          required: false,
+        },
+      ],
     });
     successResponse(res, {
       count: response.count,

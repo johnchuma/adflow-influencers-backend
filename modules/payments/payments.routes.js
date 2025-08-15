@@ -10,10 +10,10 @@ const {
 const { getPagination } = require("../../utils/getPagination");
 const router = Router();
 
-router.post("/", validateJWT, addPayment);
+router.post("/", addPayment);
 router.get("/", validateJWT, getPagination, getPayments);
 router.get("/:id", validateJWT, getPayment);
 router.patch("/:id", validateJWT, updatePayment);
-router.delete("/:id", validateJWT, deletePayment);
+router.delete("/:id", deletePayment);
 
 module.exports = router;
