@@ -154,8 +154,8 @@ io.on("connection", (socket) => {
 });
 
 // Start server
-server.listen(4002, () => {
-  console.log("Server started at port 4002");
+server.listen(process.env.PORT || 4002, () => {
+  console.log(`Server started at port ${process.env.PORT || 4002}`);
 });
 
 module.exports = { userSockets };

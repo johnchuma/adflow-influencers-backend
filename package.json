@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node scripts.js",
+    "start:local": "NODE_ENV=development node scripts.js",
+    "start:test": "NODE_ENV=test node scripts.js",
+    "start:prod": "NODE_ENV=production node scripts.js",
+    "swagger": "node swagger.js"
   },
   "keywords": [],
   "author": "",
