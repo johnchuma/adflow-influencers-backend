@@ -75,8 +75,15 @@ function checkoutBranch(branchName) {
     }
 
     // For test/production (and any other non-development env) use pm2
+    const pm2AppName =
+      env === "production"
+        ? "adflow-influencers-backend"
+        : env === "test"
+        ? "adflow-influencers-backend-test"
+        : appName;
+
     console.log(
-      `Environment is '${env}' — using pm2 to start or restart the app named '${appName}'`
+      `Environment is '${env}' — using pm2 to start or restart the app named '${pm2AppName}'`
     );
 
     // Check pm2 is available
@@ -89,9 +96,9 @@ function checkoutBranch(branchName) {
     }
 
     // Try to restart first; if that fails, start a new process
-    const restarted = run("pm2", ["restart", appName]);
+    const restarted = run("pm2", ["restart", pm2AppName]);
     if (!restarted) {
-      console.log("pm2 restart failed — attempting to start the app with pm2");
+      console.log(`pm2 restart failed — attempting to start the app with pm2`);
       const indexFile = path.join(root, "index.js");
       if (!fs.existsSync(indexFile)) {
         console.error("index.js not found in project root. Aborting.");
@@ -101,7 +108,7 @@ function checkoutBranch(branchName) {
         "start",
         indexFile,
         "--name",
-        appName,
+        pm2AppName,
         "--env",
         env,
       ]);
