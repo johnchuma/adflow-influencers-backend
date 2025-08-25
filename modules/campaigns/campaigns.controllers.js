@@ -14,7 +14,7 @@ const addCampaign = async (req, res) => {
       objectives,
       deliverables,
       requirements,
-      selectedInfluencers
+      selectedInfluencers,
     } = req.body;
     const user = req.user;
     console.log('Request body:', req.body);

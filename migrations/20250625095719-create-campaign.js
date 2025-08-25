@@ -48,6 +48,11 @@ module.exports = {
         type: DataTypes.JSON,
         allowNull: false,
       },
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "on going",
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,
