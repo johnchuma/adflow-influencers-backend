@@ -35,7 +35,7 @@ router.get(
   getInfluencerRejectedApplications
 );
 router.get("/:id", validateJWT, getCampaignInfluencer);
-router.patch("/:id", validateJWT, updateCampaignInfluencer);
+router.patch("/:id", updateCampaignInfluencer);
 router.delete("/:id", validateJWT, deleteCampaignInfluencer);
 
 module.exports = router;
