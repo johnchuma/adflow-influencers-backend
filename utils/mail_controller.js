@@ -36,7 +36,7 @@ const sendOTPEmail = ({ to, username, otp, subject }) => {
     console.log(error);
   }
 };
-const sendNewMessageAlert = ({ to, username,subject }) => {
+const sendNewMessageAlert = ({ to, username,subject,sender }) => {
   try {
     const templatePath = path.join(__dirname, "new_message_alert.ejs");
     const emailParams = {
@@ -46,6 +46,7 @@ const sendNewMessageAlert = ({ to, username,subject }) => {
       html: ejs.render(fs.readFileSync(templatePath, "utf8"), {
         email: to,
         name: username,
+        sender: sender
       }),
     };
     const response = transporter.sendMail(emailParams);

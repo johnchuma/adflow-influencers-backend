@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
+      budget: {
+        type: DataTypes.DOUBLE,
+        defaultValue: 0,
+      },
       isSelected: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
@@ -36,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "InfluencerGroupMember",
+      tableName: "InfluencerGroupMembers",
     }
   );
   return InfluencerGroupMember;
