@@ -124,7 +124,7 @@ const sendCode = async (req, res) => {
           token: code,
         });
       } else {
-        console.log("code", code);
+        console.log("code sent", code);
         // wr = await sendOTPEmail({
         //   to: isAdmin ? "herman@adflow.africa" : email,
         //   otp: code,
