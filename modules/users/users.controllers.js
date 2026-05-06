@@ -48,12 +48,13 @@ const addUser = async (req, res) => {
       if (phone) {
         wr = await sendWhatsappAuthSMS({ phone, token: code });
       } else {
-        wr = await sendOTPEmail({
-          to: email,
-          otp: code,
-          subject: "Confirmation Code",
-          username: name,
-        });
+        console.log("code", code);
+        // wr = await sendOTPEmail({
+        //   to: email,
+        //   otp: code,
+        //   subject: "Confirmation Code",
+        //   username: name,
+        // });
       }
       const user = await User.create({
         name,
@@ -123,12 +124,13 @@ const sendCode = async (req, res) => {
           token: code,
         });
       } else {
-        wr = await sendOTPEmail({
-          to: isAdmin ? "herman@adflow.africa" : email,
-          otp: code,
-          subject: "Confirmation Code",
-          username: user.name,
-        });
+        console.log("code", code);
+        // wr = await sendOTPEmail({
+        //   to: isAdmin ? "herman@adflow.africa" : email,
+        //   otp: code,
+        //   subject: "Confirmation Code",
+        //   username: user.name,
+        // });
       }
       user = await user.update({
         verificationCode: code,
@@ -218,7 +220,7 @@ const getInfluencers = async (req, res) => {
                 WHERE InfluencerDetails.userId = User.id 
                 AND InfluencerDetails.instagramHandle LIKE '%${keyword.replace(
                   /'/g,
-                  "''"
+                  "''",
                 )}%'
               )`),
         ],
