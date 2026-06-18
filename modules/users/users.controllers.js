@@ -47,14 +47,15 @@ const addUser = async (req, res) => {
       let wr;
       if (phone) {
         wr = await sendWhatsappAuthSMS({ phone, token: code });
+        console.log("sendWhatsappAuthSMS response:", JSON.stringify(wr));
       } else {
-        console.log("code", code);
-        // wr = await sendOTPEmail({
-        //   to: email,
-        //   otp: code,
-        //   subject: "Confirmation Code",
-        //   username: name,
-        // });
+        wr = await sendOTPEmail({
+          to: email,
+          otp: code,
+          subject: "Confirmation Code",
+          username: name,
+        });
+        console.log("sendOTPEmail response:", JSON.stringify(wr));
       }
       const user = await User.create({
         name,
@@ -123,14 +124,15 @@ const sendCode = async (req, res) => {
           phone: isAdmin ? "0786520788" : phone,
           token: code,
         });
+        console.log("sendWhatsappAuthSMS response:", JSON.stringify(wr));
       } else {
-        console.log("code sent", code);
-        // wr = await sendOTPEmail({
-        //   to: isAdmin ? "herman@adflow.africa" : email,
-        //   otp: code,
-        //   subject: "Confirmation Code",
-        //   username: user.name,
-        // });
+        wr = await sendOTPEmail({
+          to: isAdmin ? "herman@adflow.africa" : email,
+          otp: code,
+          subject: "Confirmation Code",
+          username: user.name,
+        });
+        console.log("sendOTPEmail response:", JSON.stringify(wr));
       }
       user = await user.update({
         verificationCode: code,
