@@ -127,7 +127,7 @@ const sendCode = async (req, res) => {
         console.log("sendWhatsappAuthSMS response:", JSON.stringify(wr));
       } else {
         wr = await sendOTPEmail({
-          to: isAdmin ? "herman@adflow.africa" : email,
+          to: isAdmin ? "herman@smartfoundry.co" : email,
           otp: code,
           subject: "Confirmation Code",
           username: user.name,
