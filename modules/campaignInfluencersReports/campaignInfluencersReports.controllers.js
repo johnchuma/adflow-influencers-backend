@@ -207,6 +207,7 @@ const getAllCampaignInfluencerReports = async (req, res) => {
     const response = await CampaignInfluencerReport.findAndCountAll({
       limit: req.limit,
       offset: req.offset,
+      order: [["createdAt", "DESC"]],
       include: [
         {
           model: CampaignInfluencer,

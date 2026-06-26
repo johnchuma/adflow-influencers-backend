@@ -27,9 +27,9 @@ router.get(
   getPagination,
   getInfluencerReportsByCampaignInfluencer
 );
-router.get("/", getAllCampaignInfluencerReports);
+router.get("/", getPagination, getAllCampaignInfluencerReports);
 router.get("/:id", getCampaignInfluencerReport);
 router.patch("/:id", updateCampaignInfluencerReport);
-router.delete("/:id", validateJWT, deleteCampaignInfluencerReport);
+router.delete("/:id", deleteCampaignInfluencerReport);
 
 module.exports = router;
