@@ -11,25 +11,15 @@ const { errorResponse, successResponse } = require("../../utils/responses");
 const addCampaignInfluencer = async (req, res) => {
   try {
     let {
-      title,
-      description,
-      budget,
-      targetAudiance,
-      includeTesting,
-      objectives,
-      deliverables,
-      requirements,
+      userId,
+      campaignId,
+      status,
     } = req.body;
 
-    const response = CampaignInfluencer.create({
-      title,
-      description,
-      budget,
-      targetAudiance,
-      includeTesting,
-      objectives,
-      deliverables,
-      requirements,
+    const response = await CampaignInfluencer.create({
+      userId,
+      campaignId,
+      status: status || "APPROVED",
     });
 
     successResponse(res, response);
@@ -230,6 +220,30 @@ const deleteCampaignInfluencer = async (req, res) => {
   }
 };
 
+const getCampaignInfluencerByUserAndCampaign = async (req, res) => {
+  try {
+    const { userId, campaignId } = req.params;
+    const response = await CampaignInfluencer.findOne({
+      where: {
+        userId,
+        campaignId,
+      },
+      include: [
+        {
+          model: Campaign,
+        },
+        {
+          model: User,
+          include: [InfluencerDetail],
+        },
+      ],
+    });
+    successResponse(res, response);
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+
 module.exports = {
   addCampaignInfluencer,
   getCampaignInfluencers,
@@ -239,4 +253,5 @@ module.exports = {
   getInfluencerApprovedApplications,
   getInfluencerRejectedApplications,
   updateCampaignInfluencer,
+  getCampaignInfluencerByUserAndCampaign,
 };

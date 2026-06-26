@@ -254,6 +254,29 @@ const deleteCampaign = async (req, res) => {
   }
 };
 
+const getAllCampaigns = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+    const response = await Campaign.findAndCountAll({
+      limit: req.limit,
+      offset: req.offset,
+      order: [["createdAt", "DESC"]],
+      where: {
+        title: {
+          [Op.like]: `%${keyword || ""}%`,
+        },
+      },
+    });
+    successResponse(res, {
+      count: response.count,
+      page: req.page,
+      rows: response.rows,
+    });
+  } catch (error) {
+    errorResponse(res, error);
+  }
+};
+
 module.exports = {
   addCampaign,
   getClientCampaigns,
@@ -263,4 +286,5 @@ module.exports = {
   getInfluencerCompletedCampaigns,
   getCampaignInfo,
   updateCampaign,
+  getAllCampaigns,
 };

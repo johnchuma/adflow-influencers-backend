@@ -9,13 +9,18 @@ const {
   getInfluencerPendingApplications,
   getInfluencerApprovedApplications,
   getInfluencerRejectedApplications,
+  getCampaignInfluencerByUserAndCampaign,
 } = require("./campaignInfluencers.controllers");
 const { getPagination } = require("../../utils/getPagination");
 
 const router = Router();
 
-router.post("/", validateJWT, addCampaignInfluencer);
+router.post("/", addCampaignInfluencer);
 router.get("/user/:id", getPagination, getCampaignInfluencers);
+router.get(
+  "/user/:userId/campaign/:campaignId",
+  getCampaignInfluencerByUserAndCampaign
+);
 router.get(
   "/pending",
   validateJWT,

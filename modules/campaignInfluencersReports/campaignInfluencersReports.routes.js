@@ -14,7 +14,7 @@ const { getPagination } = require("../../utils/getPagination");
 
 const router = Router();
 
-router.post("/", validateJWT, addCampaignInfluencerReport);
+router.post("/", addCampaignInfluencerReport);
 router.get(
   "/user/:id",
   validateJWT,

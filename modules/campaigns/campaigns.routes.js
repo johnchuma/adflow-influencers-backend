@@ -10,6 +10,7 @@ const {
   getInfluencerNewCampaigns,
   getInfluencerActiveCampaigns,
   getInfluencerCompletedCampaigns,
+  getAllCampaigns,
 } = require("./campaigns.controllers");
 const { getPagination } = require("../../utils/getPagination");
 
@@ -18,6 +19,7 @@ const router = Router();
 router.post("/", validateJWT, addCampaign);
 router.get("/user/:id", validateJWT, getPagination, getClientCampaigns);
 router.get("/", validateJWT, getPagination, getClientCampaigns);
+router.get("/all", getPagination, getAllCampaigns);
 router.get("/new", validateJWT, getPagination, getInfluencerNewCampaigns);
 router.get("/active", validateJWT, getPagination, getInfluencerActiveCampaigns);
 router.get("/completed", validateJWT, getPagination, getInfluencerCompletedCampaigns);
