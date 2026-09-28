@@ -33,6 +33,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: "SENT",
       },
+      pipelineStage: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: "Proposed",
+      },
     },
     {
       sequelize,

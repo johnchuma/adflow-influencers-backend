@@ -1,31 +1,15 @@
-const { Op, fn } = require("sequelize");
-const { Invoice } = require("../../models");
+const { Op } = require("sequelize");
+const { Invoice, CampaignInfluencer } = require("../../models");
 const { errorResponse, successResponse } = require("../../utils/responses");
 
 const addInvoice = async (req, res) => {
   try {
-    let {
-      title,
-      description,
-      budget,
-      targetAudiance,
-      includeTesting,
-      objectives,
-      deliverables,
-      requirements,
-    } = req.body;
-
-    const response = Invoice.create({
-      title,
-      description,
-      budget,
-      targetAudiance,
-      includeTesting,
-      objectives,
-      deliverables,
-      requirements,
+    const { amount, campaignInfluencerId, isPaid } = req.body;
+    const response = await Invoice.create({
+      amount,
+      campaignInfluencerId,
+      isPaid,
     });
-
     successResponse(res, response);
   } catch (error) {
     console.log(error);
@@ -33,23 +17,14 @@ const addInvoice = async (req, res) => {
   }
 };
 
-const getInvoices = async (req, res) => {
+const getInvoicesByCampaignInfluencer = async (req, res) => {
   try {
-    const { keyword } = req.query;
-    const { id } = req.params;
+    const { campaignInfluencerId } = req.params;
     const response = await Invoice.findAndCountAll({
-      limit: req.limit,
-      offset: req.offset,
-      where: {
-        title: {
-          [Op.like]: `%${keyword}%`,
-        },
-        userId: id,
-      },
+      where: { campaignInfluencerId },
     });
     successResponse(res, {
       count: response.count,
-      page: req.page,
       rows: response.rows,
     });
   } catch (error) {
@@ -60,12 +35,8 @@ const getInvoices = async (req, res) => {
 const getInvoice = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await Invoice.findOne({
-      where: {
-        id,
-      },
-    });
-    successResponse(res, user);
+    const invoice = await Invoice.findOne({ where: { id } });
+    successResponse(res, invoice);
   } catch (error) {
     errorResponse(res, error);
   }
@@ -74,14 +45,8 @@ const getInvoice = async (req, res) => {
 const updateInvoice = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await Invoice.findOne({
-      where: {
-        id,
-      },
-    });
-    const response = await user.update({
-      ...req.body,
-    });
+    const invoice = await Invoice.findOne({ where: { id } });
+    const response = await invoice.update({ ...req.body });
     successResponse(res, response);
   } catch (error) {
     errorResponse(res, error);
@@ -91,13 +56,9 @@ const updateInvoice = async (req, res) => {
 const deleteInvoice = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await Invoice.findOne({
-      where: {
-        id,
-      },
-    });
-    const response = await user.destroy();
-    successResponse(res, response);
+    const invoice = await Invoice.findOne({ where: { id } });
+    await invoice.destroy();
+    successResponse(res, { message: "Invoice deleted" });
   } catch (error) {
     errorResponse(res, error);
   }
@@ -105,8 +66,8 @@ const deleteInvoice = async (req, res) => {
 
 module.exports = {
   addInvoice,
-  getInvoices,
-  deleteInvoice,
+  getInvoicesByCampaignInfluencer,
   getInvoice,
   updateInvoice,
+  deleteInvoice,
 };

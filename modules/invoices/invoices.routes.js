@@ -1,20 +1,21 @@
 const { Router } = require("express");
-const { validateJWT } = require("../../utils/validateJWT");
 const {
   addInvoice,
-  getInvoices,
+  getInvoicesByCampaignInfluencer,
   updateInvoice,
   deleteInvoice,
   getInvoice,
 } = require("./invoices.controllers");
-const { getPagination } = require("../../utils/getPagination");
 
 const router = Router();
 
-router.post("/", validateJWT, addInvoice);
-router.get("/user/:id", validateJWT, getPagination, getInvoices);
-router.get("/:id", validateJWT, getInvoice);
-router.patch("/:id", validateJWT, updateInvoice);
-router.delete("/:id", validateJWT, deleteInvoice);
+router.post("/", addInvoice);
+router.get(
+  "/campaign-influencer/:campaignInfluencerId",
+  getInvoicesByCampaignInfluencer
+);
+router.get("/:id", getInvoice);
+router.patch("/:id", updateInvoice);
+router.delete("/:id", deleteInvoice);
 
 module.exports = router;
