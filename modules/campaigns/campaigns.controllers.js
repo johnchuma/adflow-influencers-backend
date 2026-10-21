@@ -277,8 +277,62 @@ const getAllCampaigns = async (req, res) => {
   }
 };
 
+const addCampaignFromDashboard = async (req, res) => {
+  try {
+    let {
+      title,
+      description,
+      budget,
+      duration,
+      targetAudience,
+      includeTesting,
+      objectives,
+      deliverables,
+      requirements,
+      selectedInfluencers,
+      userId,
+    } = req.body;
+
+    const response = await Campaign.create({
+      title,
+      description,
+      budget,
+      duration,
+      targetAudience,
+      includeTesting: includeTesting || false,
+      objectives: objectives || [],
+      deliverables: deliverables || [],
+      requirements: requirements || [],
+      userId: userId,
+    });
+
+    let influencers = selectedInfluencers || [];
+    if (influencers.length === 0) {
+      influencers = await User.findAll({
+        where: { role: "influencer" },
+        attributes: ["id"],
+      }).then((users) => users.map((u) => u.id));
+    }
+
+    const payload = influencers.map((item) => ({
+      userId: item,
+      campaignId: response.id,
+    }));
+
+    if (payload.length > 0) {
+      await CampaignInfluencer.bulkCreate(payload);
+    }
+
+    successResponse(res, response);
+  } catch (error) {
+    console.error("Error in addCampaignFromDashboard:", error);
+    errorResponse(res, error);
+  }
+};
+
 module.exports = {
   addCampaign,
+  addCampaignFromDashboard,
   getClientCampaigns,
   deleteCampaign,
   getInfluencerNewCampaigns,

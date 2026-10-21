@@ -56,4 +56,25 @@ const sendNewMessageAlert = ({ to, username,subject,sender }) => {
     console.log(error);
   }
 };
-module.exports = { sendOTPEmail,sendNewMessageAlert };
+const sendInvoiceNotification = ({ to, name, campaignName, influencerName, amount }) => {
+  try {
+    const templatePath = path.join(__dirname, "invoice_notification.ejs");
+    const emailParams = {
+      from: "AdFlow",
+      to: to,
+      subject: `New Invoice - TSH ${amount} for ${campaignName}`,
+      html: ejs.render(fs.readFileSync(templatePath, "utf8"), {
+        email: to,
+        name: name,
+        campaignName: campaignName,
+        influencerName: influencerName,
+        amount: amount?.toLocaleString(),
+      }),
+    };
+    const response = transporter.sendMail(emailParams);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+module.exports = { sendOTPEmail, sendNewMessageAlert, sendInvoiceNotification };

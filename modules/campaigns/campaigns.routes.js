@@ -2,6 +2,7 @@ const { Router } = require("express");
 const { validateJWT } = require("../../utils/validateJWT");
 const {
   addCampaign,
+  addCampaignFromDashboard,
   getCampaigns,
   getCampaignInfo,
   updateCampaign,
@@ -17,6 +18,7 @@ const { getPagination } = require("../../utils/getPagination");
 const router = Router();
 
 router.post("/", validateJWT, addCampaign);
+router.post("/create-from-dashboard", addCampaignFromDashboard);
 router.get("/user/:id", validateJWT, getPagination, getClientCampaigns);
 router.get("/", validateJWT, getPagination, getClientCampaigns);
 router.get("/all", getPagination, getAllCampaigns);
