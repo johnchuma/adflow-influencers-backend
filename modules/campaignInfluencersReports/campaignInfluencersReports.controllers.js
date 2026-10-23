@@ -1,4 +1,4 @@
-const { Op, fn, where } = require("sequelize");
+const { Op, fn, where, literal } = require("sequelize");
 const {
   CampaignInfluencerReport,
   CampaignInfluencer,
@@ -204,22 +204,51 @@ const getInfluencerReportsByCampaignInfluencer = async (req, res) => {
 const getAllCampaignInfluencerReports = async (req, res) => {
   try {
     const { keyword } = req.query;
+    const search = keyword?.trim();
     const response = await CampaignInfluencerReport.findAndCountAll({
       limit: req.limit,
       offset: req.offset,
       order: [["createdAt", "DESC"]],
+      distinct: true,
+      where: search
+        ? {
+            [Op.or]: [
+              { "$CampaignInfluencer.User.name$": { [Op.like]: `%${search}%` } },
+              { "$CampaignInfluencer.User.email$": { [Op.like]: `%${search}%` } },
+              {
+                "$CampaignInfluencer.User.InfluencerDetail.instagramHandle$": {
+                  [Op.like]: `%${search}%`,
+                },
+              },
+              {
+                "$CampaignInfluencer.User.InfluencerDetail.tiktokHandle$": {
+                  [Op.like]: `%${search}%`,
+                },
+              },
+              {
+                "$CampaignInfluencer.Campaign.title$": {
+                  [Op.like]: `%${search}%`,
+                },
+              },
+            ],
+          }
+        : undefined,
       include: [
         {
           model: CampaignInfluencer,
+          required: true,
           include: [
             {
               model: Campaign,
+              required: false,
             },
             {
               model: User,
+              required: false,
               include: [
                 {
                   model: InfluencerDetail,
+                  required: false,
                 },
               ],
             },
